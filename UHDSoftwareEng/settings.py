@@ -25,7 +25,7 @@ SECRET_KEY = '88=0lvqpqrug8=ok32^0do*gv#(acjk*-ffrlf0%68504^zddg'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['13.66.26.233', 'softeng.zfoxtrot.com']
+ALLOWED_HOSTS = ['13.66.26.233', 'softeng.zfoxtrot.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
