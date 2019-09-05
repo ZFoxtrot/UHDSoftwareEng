@@ -6,5 +6,5 @@ This is a Readme for our school project
 Group Members:
 
 
-
+Francisco Lopez
 Zachary Fradette
