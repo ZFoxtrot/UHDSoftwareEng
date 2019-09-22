@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+import LoginPage.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', LoginPage.views.home, name='home'),  # Home page will redirect to views.home in LoginPage
 ]
