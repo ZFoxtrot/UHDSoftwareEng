@@ -1,1 +1,15 @@
-<h1> Login Page </h1> <!--Test-->
+<!-- Temporary Login Page-->
+
+<h1> Login </h1>
+
+<form method="POST" action="{% url 'home' %}">
+{% csrf_token %}
+<h3> Username: </h3>
+<input type="text" name="username" />
+<br />
+<h3> Password: </h3>
+<input type="password" name="password" />
+<br />
+<br />
+<input type="submit" value="Login" />
+</form>
