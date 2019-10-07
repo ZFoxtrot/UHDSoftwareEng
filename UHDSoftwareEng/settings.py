@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['13.66.26.233', 'softeng.zfoxtrot.com', '127.0.0.1', 'localhost
 # Application definition
 
 INSTALLED_APPS = [
-    'LoginPage.apps.LoginpageConfig',  # Includes the LoginPage app
+    'GradeManagement.apps.GrademanagementConfig',  # Includes the LoginPage app
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
