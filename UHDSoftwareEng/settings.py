@@ -100,6 +100,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Change authorized user model
+# NOT IN USE CURRENTLY
+# AUTH_USER_MODEL = 'GradeManagement.User'
+
+# Establish a login-url for requests without logins
+LOGIN_URL = '/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

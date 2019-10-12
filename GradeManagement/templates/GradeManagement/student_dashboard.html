@@ -1,0 +1,21 @@
+{% extends "GradeManagement\dashboard.html" %}
+
+{% block sidebar %}
+<ul class="nav flex-column">
+	<li class="nav-item">
+		<a class="nav-link {% block s_home_active %}{% endblock %}" href="{% block s_home_link %}{% url 'student-home' %}{% endblock %}">
+			<i class="fas fa-home"></i> Home
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link {% block s_my-info_active %}{% endblock %}" href="{% block s_my-info_link %}{% url 'student-personal-info' %}{% endblock %}">
+			<i class="fas fa-user"></i> Student Information
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link {% block s_grades_active %}{% endblock %}" href="{% block s_grades_link %}{% url 'student-grades' %}{% endblock %}">
+			<i class="fas fa-user-graduate"></i> Grades
+		</a>
+	</li>
+</ul>
+{% endblock sidebar %}

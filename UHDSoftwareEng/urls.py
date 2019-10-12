@@ -19,5 +19,9 @@ import GradeManagement.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', GradeManagement.views.login, name='login'),  # Home page will redirect to views.home in LoginPage
+    path('', GradeManagement.views.welcome, name='welcome'),  # Home page will redirect to views.home in LoginPage
+	path('student/home', GradeManagement.views.student_home, name='student-home'),
+	path('student/personal_info', GradeManagement.views.student_personal_info, name='student-personal-info'),
+	path('student/grades', GradeManagement.views.student_grades, name='student-grades'),
+	path('goodbye', GradeManagement.views.goodbye, name='goodbye')
 ]
