@@ -7,6 +7,9 @@ class Semester(models.Model):
     StartDate = models.DateTimeField()
     EndDate = models.DateTimeField()
 
+# Field null=True is required for on_delete=models.SET_NULL to work
+# on_delete=models.CASCADE probably won't require it but I haven't tested it
+
 
 class Course(models.Model):
     Name = models.CharField(max_length=256)
