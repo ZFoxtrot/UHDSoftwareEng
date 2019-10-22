@@ -25,6 +25,16 @@ class Assignment(models.Model):
 
 
 class AssignmentGrade(models.Model):
-    Assignment = models.ForeignKey(Assignment, null=True, on_delete=models.SET_NULL)
-    UserOfAssignment = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    GradeOfAssignment = models.IntegerField()
+    Assignment = models.ManyToManyField(Assignment)
+    UserOfAssignment = models.ManyToManyField(User)
+    # default=None sets field to None if no value is given
+    # blank=True allows field to be empty given no input
+    # null=True means database row is allowed to be null
+    # set one of these for default grade to be nothing
+    GradeOfAssignment = models.IntegerField(null=True)
+
+
+class Enrollment(models.Model):
+    Students = models.ManyToManyField(User)
+    Course = models.ManyToManyField(Course)
+    Grade = models.IntegerField(null=True)
