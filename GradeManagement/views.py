@@ -33,3 +33,90 @@ def student_grades(request):
 def goodbye(request):
 	logout(request)
 	return redirect('welcome')
+
+######################
+# START: STAFF VIEWS #
+######################
+@login_required
+def staff_home(request):
+	return render(request, 'GradeManagement/staff_home.html')
+
+@login_required
+def staff_courses(request):
+	return render(request, 'GradeManagement/staff_courses.html')
+
+@login_required
+def staff_personalinfo(request):
+	return render(request, 'GradeManagement/staff_personalinfo.html')
+
+
+# STAFF ADMIN FUNCTIONS
+@login_required
+def staff_administration(request):
+	return render(request, 'GradeManagement/staff_administration.html')
+
+
+## STAFF ON USER FUNCTIONS
+@login_required
+def staff_administration_users(request):
+	return render(request, 'GradeManagement/staff_administration_users.html')
+
+@login_required
+def staff_administration_users_addUser(request):
+	return render(request, 'GradeManagement/staff_administration_users_addUser.html')
+
+@login_required
+def staff_administration_users_addUser_save(request):
+	return render(request, 'GradeManagement/staff_administration_users_addUser_save.html')
+
+@login_required
+def staff_administration_users_details(request):
+	return render(request, 'GradeManagement/staff_administration_users_details.html')
+
+@login_required
+def staff_administration_users_details_editUser(request):
+	return render(request, 'GradeManagement/staff_administration_users_details_editUser.html')
+
+@login_required
+def staff_administration_users_details_deactivateUser(request):
+	return render(request, 'GradeManagement/staff_administration_users_details_deactivateUser.html')
+
+
+## STAFF ON COURSE FUNCTIONS
+@login_required
+def staff_administration_courses(request):
+	return render(request, 'GradeManagement/staff_administration_courses.html')
+
+@login_required
+def staff_adminstration_courses_addcourse(request):
+	return render(request, 'GradeManagement/staff_adminstration_courses_addcourse.html')
+
+@login_required
+def staff_adminstration_courses_details(request):
+	return render(request, 'GradeManagement/staff_adminstration_courses_details.html')
+
+@login_required
+def staff_administration_course_duplicate(request):
+	return render(request, 'GradeManagement/staff_administration_course_duplicate.html')
+
+@login_required
+def staff_administration_course_edit(request):
+	return render(request, 'GradeManagement/staff_administration_course_edit.html')
+
+
+## STAFF ON SEMESTER FUNCTIONS
+@login_required
+def staff_administration_semesters(request):
+	return render(request, 'GradeManagement/staff_administration_semesters.html')
+
+@login_required
+def staff_administration_semesters_add(request):
+	return render(request, 'GradeManagement/staff_administration_semesters_add.html')
+
+@login_required
+def staff_administration_semesters_setCurrent(request):
+	return render(request, 'GradeManagement/staff_administration_semesters_setCurrent.html')
+
+####################
+# END: STAFF VIEWS #
+####################
