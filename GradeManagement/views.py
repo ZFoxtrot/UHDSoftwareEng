@@ -41,14 +41,44 @@ def goodbye(request):
 def staff_home(request):
 	return render(request, 'GradeManagement/staff_home.html')
 
+# STAFF COURSES FUNCTIONS
 @login_required
 def staff_courses(request):
 	return render(request, 'GradeManagement/staff_courses.html')
 
 @login_required
+def staff_courses_assignments(request):
+	return render(request, 'GradeManagement/staff_courses_assignments.html')
+
+@login_required
+def staff_courses_assignments_create(request):
+	return render(request, 'GradeManagement/staff_courses_assignments_create.html')
+
+@login_required
+def staff_courses_assigments_modify(request):
+	return render(request, 'GradeManagement/staff_courses_assigments_modify.html')
+
+@login_required
+def staff_courses_assignments_edit(request):
+	return render(request, 'GradeManagement/staff_courses_assignments_edit.html')
+
+@login_required
+def staff_courses_students(request):
+	return render(request, 'GradeManagement/staff_courses_students.html')
+
+@login_required
+def staff_course_students_setFinalGrade(request):
+	return render(request, 'GradeManagement/staff_course_students_setFinalGrade.html')
+
+
+# STAFF PERSONAL INFO FUNCTIONS
+@login_required
 def staff_personalinfo(request):
 	return render(request, 'GradeManagement/staff_personalinfo.html')
 
+@login_required
+def staff_personalinfo_editinfo(request):
+	return render(request, 'GradeManagement/staff_personalinfo_editinfo.html')
 
 # STAFF ADMIN FUNCTIONS
 @login_required
