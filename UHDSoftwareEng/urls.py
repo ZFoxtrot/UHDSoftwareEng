@@ -14,14 +14,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 import GradeManagement.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', GradeManagement.views.welcome, name='welcome'),  # Home page will redirect to views.home in LoginPage
-	path('student/home', GradeManagement.views.student_home, name='student-home'),
-	path('student/personal_info', GradeManagement.views.student_personal_info, name='student-personal-info'),
-	path('student/grades', GradeManagement.views.student_grades, name='student-grades'),
-	path('goodbye', GradeManagement.views.goodbye, name='goodbye')
+	path('student/home/', GradeManagement.views.student_home, name='student-home'),
+	path('student/personal_info/', GradeManagement.views.student_personal_info, name='student-personal-info'),
+	path('student/grades/', GradeManagement.views.student_grades, name='student-grades'),
+	path('goodbye/', GradeManagement.views.goodbye, name='goodbye'),
+    path('staff/home/', GradeManagement.views.staff_home, name='staff-home'),
+    path('staff/personal_info/', GradeManagement.views.staff_personalinfo,name='staff-personal-info'),
+    path('staff/course/', GradeManagement.views.staff_courses, name='staff-course', include([
+        path('assignments/', GradeManagement.views.staff_courses_assignments, name='staff-courses-assignments', include([
+            path('edit/', GradeManagement.views.staff_courses_assignments_edit, name='staff-courses-assignments-edit'),
+            path('modify/', GradeManagement.views.staff_courses_assigments_modify, name='staff-courses-assignments-modify'),
+            path('create/', GradeManagement.views.staff_courses_assignments_create, name='staff-courses-assignments-create'),
+        ])),
+        path('students/', GradeManagement.views.staff_courses_students, name='staff-courses-students', include([
+            path('final_grade/', GradeManagement.views.staff_course_students_setFinalGrade, name='staff-courses-final-grade'),
+        ])),
+
+    ])),
+    path('staff/admin', GradeManagement.views.staff_administration, name='staff-admin'),
+    path('staff/')
 ]
