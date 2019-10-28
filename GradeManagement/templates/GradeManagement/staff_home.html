@@ -1,0 +1,36 @@
+{% extends "GradeManagement\staff_dashboard.html" %}
+
+{% block f_home_active %}
+	active
+{% endblock %}
+{% block f_home_link %}
+	#
+{% endblock %}
+{% block title %}
+	Staff Home - Grade Management System
+{% endblock %}
+
+{% block content %}
+<h1>
+	Staff Home
+</h1>
+<h2>
+	Click a link to the left, or click a course from below
+</h2>
+<p>
+	<h3>Your Courses</h3>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">Course Name</th>
+				<th scope="col">Teacher</th>
+				<th scope="col">Semester</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+			</tr>
+		</tbody>
+	</table>
+</p>
+{% endblock %}
