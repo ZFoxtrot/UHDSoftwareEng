@@ -1,6 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+def group_required(*group_names):
+	# Requires user membership in at least one of the groups passed #
+	def in_groups(u):
+		if u.is_authenticated:
+			if bool(u.groups.filter(name__in=group_names)) | u.is_superuser:
+				return True
+		return False
+
+	return user_passes_test(in_groups)
 
 def welcome(request):
 	if request.user.is_authenticated:
@@ -37,17 +47,25 @@ def goodbye(request):
 ######################
 # START: STAFF VIEWS #
 ######################
-@login_required
+@group_required('Staff')
 def staff_home(request):
 	return render(request, 'GradeManagement/staff_home.html')
 
 # STAFF COURSES FUNCTIONS
-@login_required
+@group_required('Staff')
 def staff_courses(request):
 	return render(request, 'GradeManagement/staff_courses.html')
 
 @login_required
+def staff_course_detail(request):
+	return render(request, 'GradeManagement/staff_course_detail.html')
+
+@login_required
 def staff_courses_assignments(request):
+	return render(request, 'GradeManagement/staff_courses_assignments.html')
+
+@login_required
+def staff_courses_assignments_detail(request):
 	return render(request, 'GradeManagement/staff_courses_assignments.html')
 
 @login_required
