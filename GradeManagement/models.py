@@ -30,7 +30,7 @@ class Assignment(models.Model):
     Course = models.ForeignKey(Course, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return 'Course: {}'.format(self.Title)
+        return 'Assignment: {}'.format(self.Title)
 
 
 class AssignmentGrade(models.Model):
