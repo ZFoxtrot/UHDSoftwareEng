@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import Course, Enrollment
 
 def group_required(*group_names):
 	# Requires user membership in at least one of the groups passed #
@@ -30,7 +31,8 @@ def welcome(request):
 
 @login_required
 def student_home(request):
-	return render(request, 'GradeManagement/student_home.html')
+	StudentEnrolledCourses = Enrollment.objects.filter(Students=request.user)
+	return render(request, 'GradeManagement/student_home.html', {'courses': StudentEnrolledCourses})
 
 @login_required
 def student_personal_info(request):

@@ -20,7 +20,7 @@ class Course(models.Model):
     SemesterOfCourse = models.ForeignKey(Semester, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return 'Course: {}'.format(self.Name)
+        return self.Name
 
 
 class Assignment(models.Model):
@@ -47,3 +47,6 @@ class Enrollment(models.Model):
     Students = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     Course = models.ForeignKey(Course, null=True, on_delete=models.SET_NULL)
     Grade = models.IntegerField(null=True)
+
+    def __str__(self):
+        return 'Students: {}, Course: {}'.format(self.Students, self.Course)

@@ -12,6 +12,17 @@
 
 {% block content %}
 <h1>
-	Main Content is Here
+	Courses:
 </h1>
+	{% for course in courses %}
+		<div>
+			<ul>
+				<br>
+				<h4> {{ course }} </h4>
+				<h4> {{ course.Teacher }} </h4>
+				<h4> {{ course.SemesterOfCourse }} </h4>
+				<br>
+			</ul>
+		</div>
+	{% endfor %}
 {% endblock %}
