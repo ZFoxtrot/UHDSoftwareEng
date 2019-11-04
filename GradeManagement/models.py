@@ -30,17 +30,20 @@ class Assignment(models.Model):
     Course = models.ForeignKey(Course, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return 'Assignment: {}'.format(self.Title)
+        return 'Assignment: {}/{}'.format(self.Course, self.Title)
 
 
 class AssignmentGrade(models.Model):
-    Assignment = models.ManyToManyField(Assignment)
-    UserOfAssignment = models.ManyToManyField(User)
+    Assignment = models.ForeignKey(Assignment, null=True, on_delete=models.SET_NULL)
+    UserOfAssignment = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     # default=None sets field to None if no value is given
     # blank=True allows field to be empty given no input
     # null=True means database row is allowed to be null
     # set one of these for default grade to be nothing
     GradeOfAssignment = models.IntegerField(null=True)
+
+    def __str__(self):
+        return 'AssignmentGrade: {}/{}/{}'.format(self.Assignment, self.UserOfAssignment, self.GradeOfAssignment)
 
 
 class Enrollment(models.Model):
