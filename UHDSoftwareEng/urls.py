@@ -23,6 +23,7 @@ urlpatterns = [
 	path('student/home', GradeManagement.views.student_home, name='student-home'),
 	path('student/personal_info', GradeManagement.views.student_personal_info, name='student-personal-info'),
 	path('student/grades', GradeManagement.views.student_grades, name='student-grades'),
+	path('student/course/<int:id>', GradeManagement.views.student_course_detail, name='student-course-detail'),
 	path('goodbye', GradeManagement.views.goodbye, name='goodbye'),
     path('staff/home', GradeManagement.views.staff_home, name='staff-home'),
     path('staff/personal_info', GradeManagement.views.staff_personalinfo,name='staff-personal-info'),
