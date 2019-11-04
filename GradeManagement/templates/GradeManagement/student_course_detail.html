@@ -15,7 +15,7 @@
 	<dt class="col-sm-3">Teacher</dt>
 	<dd class="col-sm-3">{{course.Teacher.first_name}} {{course.Teacher.last_name}}</dd>
 
-	<dd class="col-sm-3">Semester</dd>
+	<dt class="col-sm-3">Semester</dt>
 	<dd class="col-sm-3">{{course.SemesterOfCourse.Title}}</dd>
 </dl>
 
@@ -30,14 +30,16 @@
 		</tr>
 	</thead>
 	<tbody>
-		{% for assignment in course.assignment_set.all %}
+		{% for assignment in grades %}
 		<tr>
 			<td>{{ assignment.Title }}</td>
-			<td>{{ assignment.Due_date|date:"N jS, p" }}</td>
+			<td>{{ assignment.Due_date|date:"N jS, P" }}</td>
 			<td>{{ assignment.Description }}</td>
 			<td>
-			{% if %}
-
+			{% if assignment.Grade is None %}
+				--
+			{% else %}
+				{{ assignment.Grade }}
 			{% endif %}
 			</td>
 		</tr>

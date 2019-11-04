@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Course, Enrollment, Assignment, AssignmentGrade, Semester
+from django.http import HttpResponse
 
 def group_required(*group_names):
 	# Requires user membership in at least one of the groups passed #
@@ -39,14 +40,17 @@ def student_home(request):
 
 @group_required('Student')
 def student_course_detail(request, id):
-	SEC = Enrollment.objects.filter(Students=request.user)
-	CourseDetail = get_object_or_404(SEC, pk=id)
-	CourseGrades = request.user.assignmentgrade_set.filter(Assignment__Course=CourseDetail.Course)
+	StudentEnrolledCourses = Enrollment.objects.filter(Students=request.user)
+	CourseDetail = get_object_or_404(StudentEnrolledCourses, Course_id=id)
+	CourseDetail = CourseDetail.Course
+	# I legit couldn't figure out how to do this query in Django's ORM, so here it is in raw SQL form
+	CourseGrades = Assignment.objects.raw('SELECT GradeManagement_assignment.id, Title, Due_date, Description, Course_id, a.Grade FROM GradeManagement_assignment LEFT JOIN (SELECT GradeManagement_assignmentgrade.GradeOfAssignment as Grade, Assignment_id FROM GradeManagement_assignmentgrade WHERE GradeManagement_assignmentgrade.UserOfAssignment_id = %s) AS a ON GradeManagement_assignment.id = a.Assignment_id WHERE Course_id = %s', [request.user.id, CourseDetail.id])
 	totalPoints = 0
 	totalCounts = 0
 	for g in CourseGrades:
-		totalPoints += g.GradeOfAssignment
-		totalCounts += 1
+		if g.Grade is not None:
+			totalPoints += g.Grade
+			totalCounts += 1
 	average = 0
 	if totalCounts > 0:
 		average = totalPoints / totalCounts
