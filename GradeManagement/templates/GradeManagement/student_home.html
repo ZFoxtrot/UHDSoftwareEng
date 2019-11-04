@@ -12,17 +12,30 @@
 
 {% block content %}
 <h1>
-	Courses:
+	Your Enrolled Courses
 </h1>
-	{% for course in courses %}
-		<div>
-			<ul>
-				<br>
-				<h4> Student: {{ course.Students }} </h4>
-				<h4> Course: {{ course.Course }} </h4>
-				<h4> Grade: {{ course.Grade }} </h4>
-				<br>
-			</ul>
-		</div>
-	{% endfor %}
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">Course Name</th>
+				<th scope="col">Teacher</th>
+				<th scope="col">Final Grade</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for course in courses %}
+			<tr>
+				<td><a href="{% url 'student-course-detail' course.Course.pk %}">{{ course.Course.Name }}</a></td>
+				<td>{{course.Course.Teacher.first_name}} {{course.Course.Teacher.last_name}}</td>
+				<td>
+					{% if course.Grade == -1 %}
+					IP
+					{% else %}
+					{{course.Grade}}
+					{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 {% endblock %}
