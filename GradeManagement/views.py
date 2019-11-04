@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Course, Enrollment
+from .models import Course, Enrollment, Assignment, AssignmentGrade, Semester
 
 def group_required(*group_names):
 	# Requires user membership in at least one of the groups passed #
@@ -24,15 +24,33 @@ def welcome(request):
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			login(request, user)
-			return redirect('student-home')
+			if bool(user.groups.filter(name__in='Student')):
+				return redirect('student-home')
+			else:
+				return redirect('staff-home')
 		else:
 			return render(request, 'GradeManagement/welcome.html', { "err" : 1})
 	raise Http400("")
 
-@login_required
+@group_required('Student')
 def student_home(request):
 	StudentEnrolledCourses = Enrollment.objects.filter(Students=request.user)
 	return render(request, 'GradeManagement/student_home.html', {'courses': StudentEnrolledCourses})
+
+@group_required('Student')
+def student_course_detail(request, id):
+	SEC = Enrollment.objects.filter(Students=request.user)
+	CourseDetail = get_object_or_404(SEC, pk=id)
+	CourseGrades = request.user.assignmentgrade_set.filter(Assignment__Course=CourseDetail.Course)
+	totalPoints = 0
+	totalCounts = 0
+	for g in CourseGrades:
+		totalPoints += g.GradeOfAssignment
+		totalCounts += 1
+	average = 0
+	if totalCounts > 0:
+		average = totalPoints / totalCounts
+	return render(request, 'GradeManagement/student_course_detail.html', {'course': CourseDetail, 'grades': CourseGrades, 'average': average})
 
 @login_required
 def student_personal_info(request):

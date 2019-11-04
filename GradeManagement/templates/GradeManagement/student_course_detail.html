@@ -1,0 +1,47 @@
+{% extends "GradeManagement\student_dashboard.html" %}
+
+{% block title %}
+	{{course.Name}} - Grade Management System
+{% endblock %}
+
+{% block content %}
+<h1>
+	Course Detail
+</h1>
+<dl class="row">
+	<dt class="col-sm-3">Name</dt>
+	<dd class="col-sm-3">{{course.Name}}</dd>
+
+	<dt class="col-sm-3">Teacher</dt>
+	<dd class="col-sm-3">{{course.Teacher.first_name}} {{course.Teacher.last_name}}</dd>
+
+	<dd class="col-sm-3">Semester</dd>
+	<dd class="col-sm-3">{{course.SemesterOfCourse.Title}}</dd>
+</dl>
+
+<h4>Assignments</h4>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th scope="col">Title</th>
+			<th scope="col">Due Date</th>
+			<th scope="col">Description</th>
+			<th scope="col">Grade</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for assignment in course.assignment_set.all %}
+		<tr>
+			<td>{{ assignment.Title }}</td>
+			<td>{{ assignment.Due_date|date:"N jS, p" }}</td>
+			<td>{{ assignment.Description }}</td>
+			<td>
+			{% if %}
+
+			{% endif %}
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}
