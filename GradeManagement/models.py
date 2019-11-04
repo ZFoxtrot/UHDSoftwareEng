@@ -44,6 +44,6 @@ class AssignmentGrade(models.Model):
 
 
 class Enrollment(models.Model):
-    Students = models.ManyToManyField(User)
-    Course = models.ManyToManyField(Course)
+    Students = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    Course = models.ForeignKey(Course, null=True, on_delete=models.SET_NULL)
     Grade = models.IntegerField(null=True)
