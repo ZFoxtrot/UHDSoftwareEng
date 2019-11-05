@@ -35,7 +35,7 @@ def welcome(request):
 
 @group_required('Student')
 def student_home(request):
-	StudentEnrolledCourses = Enrollment.objects.filter(Students=request.user)
+	StudentEnrolledCourses = Enrollment.objects.filter(Students=request.user, Course__SemesterOfCourse__Active=True)
 	return render(request, 'GradeManagement/student_home.html', {'courses': StudentEnrolledCourses})
 
 @group_required('Student')
@@ -60,8 +60,9 @@ def student_course_detail(request, id):
 def student_personal_info(request):
 	return render(request, 'GradeManagement/student_personal_info.html')
 
-@login_required
+@group_required('Student')
 def student_grades(request):
+	return render(request, 'GradeManagement/student_transcript.html')
 	pass
 
 def goodbye(request):
