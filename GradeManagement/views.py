@@ -56,9 +56,9 @@ def student_course_detail(request, id):
 		average = totalPoints / totalCounts
 	return render(request, 'GradeManagement/student_course_detail.html', {'course': CourseDetail, 'grades': CourseGrades, 'average': average})
 
-@login_required
+@group_required('Student')
 def student_personal_info(request):
-	pass
+	return render(request, 'GradeManagement/student_personal_info.html')
 
 @login_required
 def student_grades(request):
