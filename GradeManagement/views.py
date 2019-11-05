@@ -62,8 +62,11 @@ def student_personal_info(request):
 
 @group_required('Student')
 def student_grades(request):
-	return render(request, 'GradeManagement/student_transcript.html')
-	pass
+	SortedEnrollments = request.user.enrollment_set.all().order_by('Course__SemesterOfCourse__StartDate')
+	SemesterSorts = []
+	for e in SortedEnrollments:
+		
+	return render(request, 'GradeManagement/student_transcript.html', {'transcript': SortedEnrollments})
 
 def goodbye(request):
 	logout(request)

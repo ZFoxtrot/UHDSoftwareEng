@@ -14,28 +14,28 @@
 <h1>
 	Your Enrolled Courses
 </h1>
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th scope="col">Course Name</th>
-				<th scope="col">Teacher</th>
-				<th scope="col">Final Grade</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for course in courses %}
-			<tr>
-				<td><a href="{% url 'student-course-detail' course.Course.pk %}">{{ course.Course.Name }}</a></td>
-				<td>{{course.Course.Teacher.first_name}} {{course.Course.Teacher.last_name}}</td>
-				<td>
-					{% if course.Grade == -1 %}
-					IP
-					{% else %}
-					{{course.Grade}}
-					{% endif %}
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th scope="col">Course Name</th>
+			<th scope="col">Teacher</th>
+			<th scope="col">Final Grade</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for course in courses %}
+		<tr>
+			<td><a href="{% url 'student-course-detail' course.Course.pk %}">{{ course.Course.Name }}</a></td>
+			<td>{{course.Course.Teacher.first_name}} {{course.Course.Teacher.last_name}}</td>
+			<td>
+				{% if course.Grade == -1 %}
+				IP
+				{% else %}
+				{{course.Grade}}
+				{% endif %}
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
 {% endblock %}

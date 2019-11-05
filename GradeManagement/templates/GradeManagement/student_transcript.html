@@ -1,0 +1,46 @@
+{% extends "GradeManagement\student_dashboard.html" %}
+
+{% block title %}
+	My Transcript - Grade Management System
+{% endblock %}
+{% block s_grades_active %}
+	active
+{% endblock %}
+{% block s_grades_link %}
+	#
+{% endblock %}
+
+{% block content %}
+<h1>
+	My Transcript
+</h1>
+<table class="table table-striped table-sm">
+	<thead>
+		<tr>
+			<th scope="col">Title</th>
+			<th scope="col">Teacher</th>
+			<th scope="col">Final Grade</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for assignment in grades %}
+		<tr>
+			<td>{{ assignment.Title }}</td>
+			<td>{{ assignment.Due_date|date:"N jS, P" }}</td>
+			<td>{{ assignment.Description }}</td>
+			<td>
+			{% if assignment.Grade is None %}
+				--
+			{% else %}
+				{{ assignment.Grade }}
+			{% endif %}
+			</td>
+		</tr>
+		{% endfor %}
+		<tr>
+			<td colspan="3" class="text-right">Average</td>
+			<td>{{ average }}</td>
+		</tr>
+	</tbody>
+</table>
+{% endblock %}
