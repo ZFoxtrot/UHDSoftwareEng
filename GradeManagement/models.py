@@ -6,6 +6,7 @@ class Semester(models.Model):
     Title = models.CharField(max_length=256)
     StartDate = models.DateTimeField()
     EndDate = models.DateTimeField()
+    Active = models.BooleanField(default=False)
 
     def __str__(self):
         return 'Semester: {}'.format(self.Title)
@@ -20,7 +21,7 @@ class Course(models.Model):
     SemesterOfCourse = models.ForeignKey(Semester, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return self.Name
+        return 'Course: {}/{}'.format(self.Name, self.SemesterOfCourse.Title)
 
 
 class Assignment(models.Model):
@@ -49,7 +50,7 @@ class AssignmentGrade(models.Model):
 class Enrollment(models.Model):
     Students = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     Course = models.ForeignKey(Course, null=True, on_delete=models.SET_NULL)
-    Grade = models.IntegerField(null=True)
+    Grade = models.IntegerField(null=True, default=-1)
 
     def __str__(self):
-        return 'Students: {}, Course: {}'.format(self.Students, self.Course)
+        return 'Enrollment: {} @ {}'.format(self.Students, self.Course)
