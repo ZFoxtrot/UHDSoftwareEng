@@ -46,6 +46,18 @@
 		{{ request.user.groups.first.name }}
 	</dd>
 	<dt class="col-md-2">
+		Join Date
+	</dt>
+	<dd class="col-md-10">
+		{{ request.user.date_joined|date:"F jS, Y" }}
+	</dd>
+	<dt class="col-md-2">
+		Last Login
+	</dt>
+	<dd class="col-md-10">
+		{{ request.user.last_login|date:"F jS, Y P" }}
+	</dd>
+	<dt class="col-md-2">
 		Active?
 	</dt>
 	<dd class="col-md-10">
