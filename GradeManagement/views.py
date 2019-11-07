@@ -64,9 +64,36 @@ def student_personal_info(request):
 def student_grades(request):
 	SortedEnrollments = request.user.enrollment_set.all().order_by('Course__SemesterOfCourse__StartDate')
 	SemesterSorts = []
+	CurrentDictionary = {
+		"Semester": SortedEnrollments[0].Course.SemesterOfCourse,
+		"Enrollments": [],
+		"TotalPoints": 0,
+		"TotalClasses": 0,
+		"Average": 0
+	}
+	CareerTotalPoints = 0
+	CareerTotalClasses = 0
+	CareerTotalAverage = 0
 	for e in SortedEnrollments:
-		
-	return render(request, 'GradeManagement/student_transcript.html', {'transcript': SortedEnrollments})
+		if e.Course.SemesterOfCourse != CurrentDictionary["Semester"]:
+			SemesterSorts.append(CurrentDictionary)
+			CurrentDictionary = {
+				"Semester": e.Course.SemesterOfCourse,
+				"Enrollments": [],
+				"TotalPoints": 0,
+				"TotalClasses": 0,
+				"Average": 0
+			}
+		if e.Grade >= 0:
+			CareerTotalPoints += e.Grade
+			CurrentDictionary["TotalPoints"] += e.Grade
+			CareerTotalClasses += 1
+			CurrentDictionary["TotalClasses"] += 1
+			CurrentDictionary["Average"] = CurrentDictionary["TotalPoints"] / CurrentDictionary["TotalClasses"]
+		CurrentDictionary["Enrollments"].append(e)
+	SemesterSorts.append(CurrentDictionary)
+	CareerTotalAverage = CareerTotalPoints / CareerTotalClasses
+	return render(request, 'GradeManagement/student_transcript.html', {'transcript': SemesterSorts, 'average': CareerTotalAverage})
 
 def goodbye(request):
 	logout(request)

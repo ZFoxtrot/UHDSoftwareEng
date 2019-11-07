@@ -23,23 +23,39 @@
 		</tr>
 	</thead>
 	<tbody>
-		{% for assignment in grades %}
+		{% for sem in transcript %}
 		<tr>
-			<td>{{ assignment.Title }}</td>
-			<td>{{ assignment.Due_date|date:"N jS, P" }}</td>
-			<td>{{ assignment.Description }}</td>
-			<td>
-			{% if assignment.Grade is None %}
-				--
-			{% else %}
-				{{ assignment.Grade }}
-			{% endif %}
+			<td scope="col" colspan="3" class="text-center font-weight-bold">{{sem.Semester.Title}}</td>
+		</tr>
+			{% for class in sem.Enrollments %}
+		<tr>
+			<td scope="col">{{class.Course.Name}}</td>
+			<td scope="col">{{class.Course.Teacher.first_name}} {{class.Course.Teacher.last_name}}</td>
+			<td scope="col">
+				{% if class.Grade >= 0 %}
+				{{class.Grade}}
+				{% elif sem.Semester.Active %}
+				In progress
+				{% else %}
+				Registered
+				{% endif %}
 			</td>
 		</tr>
 		{% endfor %}
 		<tr>
-			<td colspan="3" class="text-right">Average</td>
-			<td>{{ average }}</td>
+			<td scope="col" colspan="2" class="text-right">Average</td>
+			<td>
+				{% if sem.Average > 0 %}
+				{{sem.Average}}
+				{% else %}
+				-
+				{% endif %}
+			</td>
+		</tr>
+		{% endfor %}
+		<tr>
+			<td scope="col" colspan="2" class="text-right font-weight-bold">Career Average</td>
+			<td>{{average}}</td>
 		</tr>
 	</tbody>
 </table>
