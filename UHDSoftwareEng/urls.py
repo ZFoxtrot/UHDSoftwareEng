@@ -27,6 +27,7 @@ urlpatterns = [
 	path('goodbye', GradeManagement.views.goodbye, name='goodbye'),
     path('staff/home', GradeManagement.views.staff_home, name='staff-home'),
     path('staff/personal_info', GradeManagement.views.staff_personalinfo,name='staff-personal-info'),
+    path('staff/personal_info/save', GradeManagement.views.staff_personalinfo_save,name='staff-personal-info-save'),
     path('staff/courses', GradeManagement.views.staff_courses, name='staff-courses'),
 	path('staff/courses/<int:id>', GradeManagement.views.staff_course_detail, name='staff-course-detail'),
 	path('staff/courses/<int:id>/', include([

@@ -14,22 +14,29 @@
 <h1>
 	Staff Home
 </h1>
-<h2>
+<h3>
 	Click a link to the left, or click a course from below
-</h2>
+</h3>
 <p>
-	<h3>Your Courses</h3>
+	<h5>Your Courses</h5>
 	<table class="table table-striped">
 		<thead>
 			<tr>
-				<th scope="col">Course Name</th>
-				<th scope="col">Teacher</th>
 				<th scope="col">Semester</th>
+				<th scope="col">Course Name</th>
+				<th scope="col">Students</th>
+				<th scope="col">Assignments</th>
 			</tr>
 		</thead>
 		<tbody>
+			{% for c in courses %}
 			<tr>
+				<td scope="col">{{c.SemesterOfCourse.Title}}</td>
+				<td scope="col"><a href="{% url 'staff-course-detail' c.id %}">{{c.Name}}</a></td>
+				<td scope="col">{{c.enrollment_set.all.count}}</td>
+				<td scope="col">{{c.assignment_set.all.count}}</td>
 			</tr>
+			{% endfor %}
 		</tbody>
 	</table>
 </p>

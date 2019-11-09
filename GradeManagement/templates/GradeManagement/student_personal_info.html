@@ -61,7 +61,7 @@
 		Active?
 	</dt>
 	<dd class="col-md-10">
-		{{ request.user.is_active }}
+		{{ request.user.is_active|yesno:"Yes,No" }}
 	</dd>
 </dl>
 
