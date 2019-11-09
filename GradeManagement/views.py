@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Course, Enrollment, Assignment, AssignmentGrade, Semester
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 def group_required(*group_names):
 	# Requires user membership in at least one of the groups passed #
@@ -16,7 +17,10 @@ def group_required(*group_names):
 
 def welcome(request):
 	if request.user.is_authenticated:
-		return redirect('student-home')
+		if bool(user.groups.filter(name__in='Student')):
+			return redirect('student-home')
+		else:
+			return redirect('staff-home')
 	elif request.method == 'GET':
 		return render(request, 'GradeManagement/welcome.html')
 	elif request.method == 'POST':
@@ -104,7 +108,30 @@ def goodbye(request):
 ######################
 @group_required('Staff')
 def staff_home(request):
-	return render(request, 'GradeManagement/staff_home.html')
+	StaffCourses = Course.objects.filter(Teacher = request.user, SemesterOfCourse__Active = True)
+	return render(request, 'GradeManagement/staff_home.html', {'courses': StaffCourses})
+
+# STAFF PERSONAL INFO FUNCTIONS
+@group_required('Staff')
+def staff_personalinfo(request):
+	AllGroups = Group.objects.all()
+	return render(request, 'GradeManagement/staff_personal_info.html', {'groups': AllGroups})
+
+@group_required('Staff')
+def staff_personalinfo_save(request):
+	successCode = 0
+	if request.method == "POST":
+		try:
+			request.user.first_name = request.POST['firstName']
+			request.user.last_name = request.POST['lastName']
+			request.user.email = request.POST['email']
+			request.user.save()
+			successCode = 1
+		except:
+			successCode = -1
+	else:
+		successCode = -2
+	return JsonResponse({'success': successCode})
 
 # STAFF COURSES FUNCTIONS
 @group_required('Staff')
@@ -143,15 +170,6 @@ def staff_courses_students(request):
 def staff_course_students_setFinalGrade(request):
 	return render(request, 'GradeManagement/staff_course_students_setFinalGrade.html')
 
-
-# STAFF PERSONAL INFO FUNCTIONS
-@login_required
-def staff_personalinfo(request):
-	return render(request, 'GradeManagement/staff_personalinfo.html')
-
-@login_required
-def staff_personalinfo_editinfo(request):
-	return render(request, 'GradeManagement/staff_personalinfo_editinfo.html')
 
 # STAFF ADMIN FUNCTIONS
 @login_required

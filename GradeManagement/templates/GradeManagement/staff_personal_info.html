@@ -1,0 +1,159 @@
+{% extends "GradeManagement\staff_dashboard.html" %}
+
+{% block f_info_active %}
+	active
+{% endblock %}
+{% block f_info_link %}
+	#
+{% endblock %}
+{% block title %}
+	My Personal Information - Grade Management System
+{% endblock %}
+{% block css %}
+<style>
+	.input {
+		display: none;
+	}
+</style>
+{% endblock %}
+
+
+{% block content %}
+<h1>
+	Your Personal Information
+</h1>
+<dl class="row">
+	<dt class="col-md-2">
+		Username
+	</dt>
+	<dd class="col-md-10">
+		{{ request.user.username }}
+	</dd>
+	<dt class="col-md-2">
+		First Name
+	</dt>
+	<dd class="col-md-10">
+		<div class="context">
+			{{ request.user.first_name }}
+		</div>
+		<div class="input">
+			<input type="text" class="form-control" id="firstName" value="{{ request.user.first_name }}">
+		</div>
+	</dd>
+	<dt class="col-md-2">
+		Last Name
+	</dt>
+	<dd class="col-md-10">
+		<div class="context">
+			{{ request.user.last_name }}
+		</div>
+		<div class="input">
+			<input type="text" class="form-control" id="lastName" value="{{ request.user.last_name }}">
+		</div>
+	</dd>
+	<dt class="col-md-2">
+		Email
+	</dt>
+	<dd class="col-md-10">
+		<div class="context">
+			{{ request.user.email }}
+		</div>
+		<div class="input">
+			<input type="email" class="form-control" id="email" value="{{ request.user.email }}">
+		</div>
+	</dd>
+	<dt class="col-md-2">
+		Group
+	</dt>
+	<dd class="col-md-10">
+			{{ request.user.groups.first.name }}
+	</dd>
+	<dt class="col-md-2">
+		Join Date
+	</dt>
+	<dd class="col-md-10">
+		{{ request.user.date_joined|date:"F jS, Y" }}
+	</dd>
+	<dt class="col-md-2">
+		Last Login
+	</dt>
+	<dd class="col-md-10">
+		{{ request.user.last_login|date:"F jS, Y P" }}
+	</dd>
+	<dt class="col-md-2">
+		Active?
+	</dt>
+	<dd class="col-md-10">
+		{{ request.user.is_active|yesno:"Yes,No" }}
+	</dd>
+</dl>
+
+<div class="row">
+	<div class="context">
+		<button type="button" class="btn btn-warning" onclick="enableEditing()"><i class="fas fa-pencil-alt"></i> Edit</button>
+	</div>
+	<div class="input">
+		<button type="button" class="btn btn-success" onclick="save()" style="margin-right: 5px;"><i class="fas fa-save"></i> Save</button>
+		<button type="button" class="btn btn-danger" onclick="cancel()"><i class="fas fa-times-circle"></i> Cancel</button>
+	</div>
+</div>
+{% csrf_token %}
+{% endblock %}
+
+
+{% block js %}
+<script charset="utf-8">
+	function enableEditing() {
+		$(".context").css("display", "none");
+		$(".input").css("display", "inherit");
+	}
+
+	function csrfSafeMethod(method) {
+		// these HTTP methods do not require CSRF protection
+		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+	function save() {
+		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if(!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+		$.ajax({
+			type: "POST",
+			url: "{% url 'staff-personal-info-save' %}",
+			data: {
+				"firstName": $("#firstName").val(),
+				"lastName": $("#lastName").val(),
+				"email": $("#email").val()
+			},
+			success: function(data) {
+				switch(data["success"]) {
+					case 1:
+						location.reload();
+						break;
+					case -1:
+						$("main").prepend(prepAlertPop("<strong>Erorr!</strong> There was an error with validating the form inputs, please verify them below."));
+						break;
+					case -2:
+						$("main").prepend(prepAlertPop("<strong>Erorr!</strong> The request was malformed."));
+						break;
+					default:
+						$("main").prepend(prepAlertPop("<strong>Erorr!</strong> An unknown error has occured."));
+						break;
+
+					}
+				}
+			});
+	}
+	function cancel() {
+		$(".context").css("display", "inherit");
+		$(".input").css("display", "none");
+	}
+	function prepAlertPop(alertText) {
+		return '<div class="alert alert-danger alert-dismissible fade show" role="alert">' + alertText + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	}
+</script>
+{% endblock %}
