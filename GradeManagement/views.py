@@ -17,7 +17,7 @@ def group_required(*group_names):
 
 def welcome(request):
 	if request.user.is_authenticated:
-		if bool(user.groups.filter(name__in='Student')):
+		if bool(request.user.groups.filter(name__in='Student')):
 			return redirect('student-home')
 		else:
 			return redirect('staff-home')
