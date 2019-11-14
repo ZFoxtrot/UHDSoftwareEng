@@ -28,18 +28,17 @@ urlpatterns = [
     path('staff/home', GradeManagement.views.staff_home, name='staff-home'),
     path('staff/personal_info', GradeManagement.views.staff_personalinfo,name='staff-personal-info'),
     path('staff/personal_info/save', GradeManagement.views.staff_personalinfo_save,name='staff-personal-info-save'),
-    path('staff/courses', GradeManagement.views.staff_courses, name='staff-courses'),
-	path('staff/courses/<int:id>', GradeManagement.views.staff_course_detail, name='staff-course-detail'),
-	path('staff/courses/<int:id>/', include([
-        path('assignments', GradeManagement.views.staff_courses_assignments, name='staff-courses-assignments'),
-		path('assignments/<int:id>', GradeManagement.views.staff_courses_assignments_detail, name='staff-courses-assignments-detail'),
-		path('assignments/<int:id>/', include([
-            path('edit', GradeManagement.views.staff_courses_assignments_edit, name='staff-courses-assignments-edit'),
-            path('modify', GradeManagement.views.staff_courses_assigments_modify, name='staff-courses-assignments-modify'),
-            path('create', GradeManagement.views.staff_courses_assignments_create, name='staff-courses-assignments-create'),
-        ])),
-        path('students', GradeManagement.views.staff_courses_students, name='staff-courses-students'),
-		path('students/<int:id>/final_grade', GradeManagement.views.staff_course_students_setFinalGrade, name='staff-courses-final-grade'),
+	path('staff/course/<int:id>', GradeManagement.views.staff_course_detail, name='staff-course-detail'),
+	path('staff/course/<int:id>/', include([
+        path('assignments/create', GradeManagement.views.staff_courses_assignment_create, name='staff-courses-assignment-create'),
+		path('assignments/<int:aid>', GradeManagement.views.staff_courses_assignment_detail, name='staff-courses-assignment-detail'),
+		path('assignments/<int:aid>/save_grades', GradeManagement.views.staff_courses_assignment_save_grades, name='staff-courses-assignment-save-grades'),
+		path('assignments/<int:aid>/edit',  GradeManagement.views.staff_courses_assignment_edit, name='staff-courses-assignment-edit'),
+        path('final_grades', GradeManagement.views.staff_courses_final_grades, name='staff-courses-final-grades'),
+        path('final_grades/save', GradeManagement.views.staff_courses_final_grades_save, name='staff-courses-final-grades-save'),
     ])),
     path('staff/admin', GradeManagement.views.staff_administration, name='staff-admin'),
+	path('staff/admin/', include([
+		path('course/<int:id>/edit', GradeManagement.views.staff_administration_course_edit, name='staff-admin-course-edit')
+	])),
 ]

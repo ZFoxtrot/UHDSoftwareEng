@@ -17,7 +17,7 @@ def group_required(*group_names):
 
 def welcome(request):
 	if request.user.is_authenticated:
-		if bool(request.user.groups.filter(name__in='Student')):
+		if request.user.groups.filter(name="Student").exists():
 			return redirect('student-home')
 		else:
 			return redirect('staff-home')
@@ -29,7 +29,7 @@ def welcome(request):
 		user = authenticate(request, username=username, password=password)
 		if user is not None:
 			login(request, user)
-			if bool(user.groups.filter(name__in='Student')):
+			if request.user.groups.filter(name="Student").exists():
 				return redirect('student-home')
 			else:
 				return redirect('staff-home')
@@ -135,41 +135,48 @@ def staff_personalinfo_save(request):
 
 # STAFF COURSES FUNCTIONS
 @group_required('Staff')
-def staff_courses(request):
-	return render(request, 'GradeManagement/staff_courses.html')
+def staff_course_detail(request, id):
+	c = get_object_or_404(Course, pk=id)
+	a = c.assignment_set.all()
+	e = c.enrollment_set.all()
+	return render(request, 'GradeManagement/staff_course_detail.html', {
+	"course": c,
+	"assignments": a,
+	"enrollments": e
+	})
 
-@login_required
-def staff_course_detail(request):
-	return render(request, 'GradeManagement/staff_course_detail.html')
-
-@login_required
+@group_required('Staff')
 def staff_courses_assignments(request):
 	return render(request, 'GradeManagement/staff_courses_assignments.html')
 
-@login_required
-def staff_courses_assignments_detail(request):
-	return render(request, 'GradeManagement/staff_courses_assignments.html')
+@group_required('Staff')
+def staff_courses_assignment_detail(request, id, aid):
+	c = get_object_or_404(Course, pk=id)
+	a = get_object_or_404(Assignment, pk=aid)
+	e = c.enrollment_set.all()
+	ag = a.assignmentgrade_set.all()
+	return render(request, 'GradeManagement/staff_courses_assignments.html', {
+	"course": c,
+	"assignment": a,
+	"enrollments": e,
+	"grades": ag
+	})
 
 @login_required
-def staff_courses_assignments_create(request):
+def staff_courses_assignment_create(request):
 	return render(request, 'GradeManagement/staff_courses_assignments_create.html')
 
 @login_required
-def staff_courses_assigments_modify(request):
-	return render(request, 'GradeManagement/staff_courses_assigments_modify.html')
-
-@login_required
-def staff_courses_assignments_edit(request):
+def staff_courses_assignment_edit(request):
 	return render(request, 'GradeManagement/staff_courses_assignments_edit.html')
 
-@login_required
-def staff_courses_students(request):
-	return render(request, 'GradeManagement/staff_courses_students.html')
+@group_required('Staff')
+def staff_courses_final_grades(request):
+	return render(request, 'GradeManagement/staff_courses_final_grades.html')
 
-@login_required
-def staff_course_students_setFinalGrade(request):
-	return render(request, 'GradeManagement/staff_course_students_setFinalGrade.html')
-
+@group_required('Staff')
+def staff_courses_final_grades_save(request):
+	return render(request, 'GradeManagement/staff_courses_final_grades.html')
 
 # STAFF ADMIN FUNCTIONS
 @login_required
