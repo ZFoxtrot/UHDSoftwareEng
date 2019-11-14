@@ -4,17 +4,12 @@
 <ul class="nav flex-column">
 	<li class="nav-item">
 		<a class="nav-link {% block f_home_active %}{% endblock %}" href="{% block f_home_link %}{% url 'staff-home' %}{% endblock %}">
-			<i class="fas fa-home"></i> Home
+			<i class="fas fa-home"></i> Home and My Courses
 		</a>
 	</li>
 	<li class="nav-item">
 		<a class="nav-link {% block f_info_active %}{% endblock %}" href="{% block f_info_link %}{% url 'staff-personal-info' %}{% endblock %}">
 			<i class="fas fa-user"></i> Personal Information
-		</a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link {% block f_courses_active %}{% endblock %}" href="{% block f_courses_link %}{% url 'staff-courses' %}{% endblock %}">
-			<i class="fas fa-list"></i> Courses
 		</a>
 	</li>
 	<li class="nav-item">
