@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Course, Enrollment, Assignment, AssignmentGrade, Semester
 from django.http import HttpResponse, JsonResponse
+from .forms import AssignmentForm
 
 def group_required(*group_names):
 	# Requires user membership in at least one of the groups passed #
@@ -164,11 +165,24 @@ def staff_courses_assignment_detail(request, id, aid):
 
 @login_required
 def staff_courses_assignment_create(request):
-	return render(request, 'GradeManagement/staff_courses_assignments_create.html')
+	if request.method == "POST":
+		form = AssignmentForm(request.POST)
+		if form.is_valid():
+			Assignment = form.save()
+	return render(request, 'GradeManagement/staff_courses_assignments_create.html', {'form': form})
 
 @login_required
-def staff_courses_assignment_edit(request):
-	return render(request, 'GradeManagement/staff_courses_assignments_edit.html')
+def staff_courses_assignment_edit(request, pk):
+	Edit = get_object_or_404(Assignment, pk=pk)
+	if request.method == "POST":
+		form = AssignmentForm(request.POST, instance=Edit)
+		if form.is_valid():
+			Edit = form.save(commit=False)
+			Edit.save()
+			return redirect('staff_courses_assignments', pk=Edit.pk)
+	else:
+		form = AssignmentForm(instance=Edit)
+	return render(request, 'GradeManagement/staff_courses_assignments_edit.html', {'form': form})
 
 @group_required('Staff')
 def staff_courses_final_grades(request):
