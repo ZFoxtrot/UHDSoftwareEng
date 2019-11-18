@@ -164,6 +164,10 @@ def staff_courses_assignment_detail(request, id, aid):
 	})
 
 @login_required
+def staff_courses_assignment_save_grades(request):
+	return render(request, 'GradeManagement/staff_courses_assignment_save_grade.html')
+
+@login_required
 def staff_courses_assignment_create(request):
 	if request.method == "POST":
 		form = AssignmentForm(request.POST)
