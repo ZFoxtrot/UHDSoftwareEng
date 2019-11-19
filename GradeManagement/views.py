@@ -188,7 +188,7 @@ def staff_courses_assignment_edit(request, id):
 			Edit.Due_date = request.POST['Due_date']
 			Edit.Description = request.POST['Description']
 			Edit.save()
-			return redirect('staff_courses_assignments', id=Edit.id)
+			return redirect('GradeManagement/staff_courses_assignments.html', id=Edit.id)
 	else:
 		form = AssignmentForm(instance=Edit)
 	return render(request, 'GradeManagement/staff_courses_assignments_edit.html', {'form': form})
