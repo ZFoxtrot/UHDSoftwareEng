@@ -241,7 +241,18 @@ def staff_administration_courses(request):
 
 @login_required
 def staff_adminstration_courses_addcourse(request):
-	return render(request, 'GradeManagement/staff_adminstration_courses_addcourse.html')
+	if request.method == "POST":
+		form = CourseForm(request.POST)
+		if form.is_valid():
+			NewCourse = form.save(commit=False)
+			NewCourse = request.POST['Name']
+			NewCourse = request.POST['Teacher']
+			NewCourse = request.POST['SemesterOfCourse']
+			NewCourse = form.save()
+			return redirect('GradeManagement/staff_administration_courses', pk=NewCourse.pk)
+	else:
+		form = CourseForm()
+	return render(request, 'GradeManagement/staff_adminstration_courses_addcourse.html', {'form': form})
 
 @login_required
 def staff_adminstration_courses_details(request):
