@@ -173,13 +173,14 @@ def staff_courses_assignment_create(request):
 			Assignment.Due_date = request.POST['Due_date']
 			Assignment.Description = request.POST['Description']
 			Assignment.save()
+			return redirect('GradeManagement/staff_courses_assignment_detail', pk=Assignment.pk)
 	else:
 		form = AssignmentForm()
 	return render(request, 'GradeManagement/staff_courses_assignments_create.html', {'form': form})
 
 @login_required
-def staff_courses_assignment_edit(request, id):
-	Edit = get_object_or_404(Assignment, id=id)
+def staff_courses_assignment_edit(request, pk):
+	Edit = get_object_or_404(Assignment, pk=pk)
 	if request.method == "POST":
 		form = AssignmentForm(request.POST, instance=Edit)
 		if form.is_valid():
@@ -188,7 +189,7 @@ def staff_courses_assignment_edit(request, id):
 			Edit.Due_date = request.POST['Due_date']
 			Edit.Description = request.POST['Description']
 			Edit.save()
-			return redirect('GradeManagement/staff_courses_assignments.html', id=Edit.id)
+			return redirect('GradeManagement/staff_courses_assignments.html', pk=Edit.pk)
 	else:
 		form = AssignmentForm(instance=Edit)
 	return render(request, 'GradeManagement/staff_courses_assignments_edit.html', {'form': form})
