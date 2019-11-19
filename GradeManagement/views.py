@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Course, Enrollment, Assignment, AssignmentGrade, Semester
 from django.http import HttpResponse, JsonResponse
-from .forms import AssignmentForm
+from .forms import AssignmentForm, SemesterForm, CourseForm
 
 def group_required(*group_names):
 	# Requires user membership in at least one of the groups passed #
