@@ -32,6 +32,7 @@ urlpatterns = [
 	path('staff/course/<int:id>/', include([
         path('assignments/create', GradeManagement.views.staff_courses_assignment_create, name='staff-courses-assignment-create'),
 		path('assignments/<int:aid>', GradeManagement.views.staff_courses_assignment_detail, name='staff-courses-assignment-detail'),
+		path('assignments/<int:aid>/save_grades', GradeManagement.views.staff_courses_assignment_save_grades, name='staff-courses-assignment-save-grades'),
 		path('assignments/<int:aid>/edit',  GradeManagement.views.staff_courses_assignment_edit, name='staff-courses-assignment-edit'),
         path('final_grades', GradeManagement.views.staff_courses_final_grades, name='staff-courses-final-grades'),
         path('final_grades/save', GradeManagement.views.staff_courses_final_grades_save, name='staff-courses-final-grades-save'),
