@@ -156,12 +156,37 @@ def staff_courses_assignment_detail(request, id, aid):
 	a = get_object_or_404(Assignment, pk=aid)
 	e = c.enrollment_set.all()
 	ag = a.assignmentgrade_set.all()
-	return render(request, 'GradeManagement/staff_courses_assignments.html', {
-	"course": c,
-	"assignment": a,
-	"enrollments": e,
-	"grades": ag
-	})
+	if request.method == "POST":
+		list = request.POST.getlist('ids[]')
+		for input in list:
+			if input.startswith('grade'):
+				id = input[5:]
+				if ag.filter(UserOfAssignment__id=id).exists():
+					curGrade = ag.get(UserOfAssignment__id=id)
+					if request.POST[input] == "":
+						curGrade.GradeOfAssignment = None
+					else:
+						curGrade.GradeOfAssignment = request.POST[input]
+					curGrade.save()
+				elif request.POST[input] != "":
+					curGrade = AssignmentGrade()
+					curGrade.UserOfAssignment = Users.objects.get(id=id)
+					curGrade.Assignment = a
+					curGrade.Grade = request.POST[input]
+					curGrade.save()
+		return render(request, 'GradeManagement/staff_courses_assignments.html', {
+		"course": c,
+		"assignment": a,
+		"enrollments": e,
+		"grades": ag
+		})
+	else:
+		return render(request, 'GradeManagement/staff_courses_assignments.html', {
+		"course": c,
+		"assignment": a,
+		"enrollments": e,
+		"grades": ag
+		})
 
 @login_required
 def staff_courses_assignment_save_grades(request):
