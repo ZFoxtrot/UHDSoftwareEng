@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Course, Enrollment, Assignment, AssignmentGrade, Semester
 from django.http import HttpResponse, JsonResponse
 from .forms import AssignmentForm, SemesterForm, CourseForm, AddUserForm, EditUserForm
+from datetime import datetime
 
 def group_required(*group_names):
 	# Requires user membership in at least one of the groups passed #
@@ -156,56 +157,58 @@ def staff_courses_assignment_detail(request, id, aid):
 	a = get_object_or_404(Assignment, pk=aid)
 	e = c.enrollment_set.all()
 	ag = a.assignmentgrade_set.all()
+	return render(request, 'GradeManagement/staff_courses_assignments.html', {
+	"course": c,
+	"assignment": a,
+	"enrollments": e,
+	"grades": ag
+	})
+
+@group_required('Staff')
+def staff_courses_assignment_save_grades(request, id, aid):
 	if request.method == "POST":
-		list = request.POST.getlist('ids[]')
-		for input in list:
-			if input.startswith('grade'):
-				id = input[5:]
-				if ag.filter(UserOfAssignment__id=id).exists():
-					curGrade = ag.get(UserOfAssignment__id=id)
-					if request.POST[input] == "":
-						curGrade.GradeOfAssignment = None
-					else:
-						curGrade.GradeOfAssignment = request.POST[input]
-					curGrade.save()
-				elif request.POST[input] != "":
-					curGrade = AssignmentGrade()
-					curGrade.UserOfAssignment = Users.objects.get(id=id)
-					curGrade.Assignment = a
-					curGrade.Grade = request.POST[input]
-					curGrade.save()
-		return render(request, 'GradeManagement/staff_courses_assignments.html', {
-		"course": c,
-		"assignment": a,
-		"enrollments": e,
-		"grades": ag
-		})
-	else:
-		return render(request, 'GradeManagement/staff_courses_assignments.html', {
-		"course": c,
-		"assignment": a,
-		"enrollments": e,
-		"grades": ag
-		})
+		c = get_object_or_404(Course, pk=id)
+		a = get_object_or_404(Assignment, pk=aid)
+		e = c.enrollment_set.all()
+		ag = a.assignmentgrade_set.all()
+		for key in request.POST:
+			if key.startswith('grade'):
+				uid = key[5:]
+				try:
+					value = int(request.POST[key])
+					if ag.filter(UserOfAssignment__id=uid).exists():
+						curGrade = ag.get(UserOfAssignment__id=uid)
+						if value == "":
+							curGrade.GradeOfAssignment = None
+						else:
+							curGrade.GradeOfAssignment = value
+						curGrade.save()
+					elif value is not "":
+						curGrade = AssignmentGrade(UserOfAssignment=User.objects.get(id=uid), Assignment=a, GradeOfAssignment=value)
+						curGrade.save()
+				except ValueError:
+					pass
+	return redirect('staff-courses-assignment-detail', id, aid)
 
 @login_required
-def staff_courses_assignment_save_grades(request):
-	return render(request, 'GradeManagement/staff_courses_assignment_save_grade.html')
-
-@login_required
-def staff_courses_assignment_create(request):
+def staff_courses_assignment_create(request, id):
+	c = get_object_or_404(Course, pk=id)
 	if request.method == "POST":
 		form = AssignmentForm(request.POST)
 		if form.is_valid():
-			Assignment = form.save(commit=False)
-			Assignment.Title = request.POST['Title']
-			Assignment.Due_date = request.POST['Due_date']
-			Assignment.Description = request.POST['Description']
-			Assignment.save()
-			return redirect('GradeManagement/staff_courses_assignment_detail', pk=Assignment.pk)
+			a = Assignment()
+			a.Title = form.cleaned_data['title']
+			a.Due_date = datetime.combine(form.cleaned_data['due_date'], form.cleaned_data['due_time'])
+			a.Description = form.cleaned_data['description']
+			a.Course = c
+			a.save()
+			return redirect('staff-courses-assignment-detail', id, a.id)
 	else:
 		form = AssignmentForm()
-	return render(request, 'GradeManagement/staff_courses_assignments_create.html', {'form': form})
+	return render(request, 'GradeManagement/staff_courses_assignments_create.html', {
+	'form': form,
+	"course": c
+	})
 
 @login_required
 def staff_courses_assignment_edit(request, pk):

@@ -7,6 +7,8 @@ register = template.Library()
 def grade_select(value, arg):
 	try:
 		ret = value.get(UserOfAssignment=arg)
+		if ret.GradeOfAssignment is None:
+			return ""
 		return ret.GradeOfAssignment
 	except AssignmentGrade.DoesNotExist:
 		return ""

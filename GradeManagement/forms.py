@@ -5,12 +5,11 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import Assignment, Semester, Course
 
 
-class AssignmentForm(forms.ModelForm):
-
-    class Meta:
-        model = Assignment
-        fields = ('Title', 'Due_date', 'Description', 'Course',)
-
+class AssignmentForm(forms.Form):
+	title = forms.CharField(label='Title', max_length=256, required=True)
+	due_date = forms.DateField(widget=forms.DateInput, label='Date', required=True)
+	due_time = forms.TimeField(widget=forms.TimeInput, label='Time', required=True)
+	description = forms.CharField(widget=forms.Textarea, required=True)
 
 class SemesterForm(forms.ModelForm):
 
