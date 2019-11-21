@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Course, Enrollment, Assignment, AssignmentGrade, Semester
 from django.http import HttpResponse, JsonResponse
-from .forms import AssignmentForm, SemesterForm, CourseForm
+from .forms import AssignmentForm, SemesterForm, CourseForm, AddUserForm, EditUserForm
 
 def group_required(*group_names):
 	# Requires user membership in at least one of the groups passed #
@@ -219,7 +219,14 @@ def staff_administration_users(request):
 
 @login_required
 def staff_administration_users_addUser(request):
-	return render(request, 'GradeManagement/staff_administration_users_addUser.html')
+	if request.method == "POST":
+		form = AddUserForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect('GradeManagement/staff_administration_users.html')
+		else:
+			form = AddUserForm()
+	return render(request, 'GradeManagement/staff_administration_users_addUser.html', {'form': form})
 
 @login_required
 def staff_administration_users_addUser_save(request):
@@ -231,7 +238,14 @@ def staff_administration_users_details(request):
 
 @login_required
 def staff_administration_users_details_editUser(request):
-	return render(request, 'GradeManagement/staff_administration_users_details_editUser.html')
+	if request.method == "POST":
+		form = EditUserForm(request.POST, instance=request.user)
+		if form.is_valid():
+			form.save()
+			return redirect('GradeManagement/staff_administration_users.html')
+	else:
+		form = EditUserForm(instance=request.user)
+	return render(request, 'GradeManagement/staff_administration_users_details_editUser.html', {'form': form})
 
 @login_required
 def staff_administration_users_details_deactivateUser(request):
