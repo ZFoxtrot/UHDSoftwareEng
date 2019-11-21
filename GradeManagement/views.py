@@ -253,7 +253,7 @@ def staff_adminstration_courses_addcourse(request):
 			NewCourse = request.POST['Teacher']
 			NewCourse = request.POST['SemesterOfCourse']
 			NewCourse = form.save()
-			return redirect('GradeManagement/staff_administration_courses', pk=NewCourse.pk)
+			return redirect('GradeManagement/staff_administration_courses.html', pk=NewCourse.pk)
 	else:
 		form = CourseForm()
 	return render(request, 'GradeManagement/staff_adminstration_courses_addcourse.html', {'form': form})
@@ -267,7 +267,19 @@ def staff_administration_course_duplicate(request):
 	return render(request, 'GradeManagement/staff_administration_course_duplicate.html')
 
 @login_required
-def staff_administration_course_edit(request):
+def staff_administration_course_edit(request, pk):
+	CourseEdit = get_object_or_404(Course, pk=pk)
+	if request.method == "POST":
+		form = CourseForm(request.POST, instance=CourseEdit)
+		if form.is_valid():
+			CourseEdit = form.save(commit=False)
+			CourseEdit.Name = request.POST['Name']
+			CourseEdit.Teacher = request.POST['Teacher']
+			CourseEdit.SemesterOfCourse = request.POST['SemesterOfCourse']
+			CourseEdit.save()
+			return redirect('GradeManagement/staff_administration_courses.html', pk=CourseEdit.pk)
+	else:
+		form = CourseForm(instance=CourseEdit)
 	return render(request, 'GradeManagement/staff_administration_course_edit.html')
 
 
