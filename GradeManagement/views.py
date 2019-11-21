@@ -304,7 +304,19 @@ def staff_administration_semesters(request):
 
 @login_required
 def staff_administration_semesters_add(request):
-	return render(request, 'GradeManagement/staff_administration_semesters_add.html')
+	if request.method == "POST":
+		form = SemesterForm(request.POST)
+		if form.is_valid():
+			NewSemester = form.save(commit=False)
+			NewSemester.Title = request.POST['Title']
+			NewSemester.StartDate = request.POST['StartDate']
+			NewSemester.EndDate = request.POST['EndDate']
+			NewSemester.Active = request.POST['Active']
+			NewSemester.save()
+			return redirect('GradeManagement/staff_administration_semesters.html', pk=NewSemester.pk)
+	else:
+		form = SemesterForm()
+	return render(request, 'GradeManagement/staff_administration_semesters_add.html', {'form': form})
 
 @login_required
 def staff_administration_semesters_setCurrent(request):
