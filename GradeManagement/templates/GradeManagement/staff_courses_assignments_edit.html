@@ -1,0 +1,48 @@
+{% extends "GradeManagement\staff_dashboard.html" %}
+
+{% block title %}
+	{{course.Name}} // Edit {{assignment.Title}} - Grade Management System
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+	<h1>
+		Edit {{assignment.Title}}
+		<small class="text-muted">{{course.Name}}</small>
+	</h1>
+</div>
+<div class="row">
+	<div class="col">
+		<form id="gradeForm" action="{% url 'staff-courses-assignment-edit' course.id assignment.id %}" method="post">
+			{% csrf_token %}
+			<div class="form-group">
+				<label for="id_title">Assignment Title</label>
+				<input type="text" name="title" maxlength="256" required="" class="form-control" id="id_title" value="{{form.title.value}}">
+			</div>
+			<div class="form-group">
+				<label for="id_title">Assignment Description</label>
+				<textarea name="description" required="" class="form-control" id="id_description">{{form.description.value}}</textarea>
+			</div>
+			<div class="form-group">
+				<label for="id_due_date">Due Date and Time</label>
+				<div class="row">
+					<div class="col">
+						<input type="date" name="due_date" id="id_due_date" class="form-control" value="{{form.due_date.value|date:'Y-m-d'}}"/>
+					</div>
+					<div class="col">
+						<input type="time" name="due_time" id="id_due_time" class="form-control" value="{{form.due_time.value|date:'H:i'}}"/>
+					</div>
+				</div>
+			</div>
+			<button class="btn btn-primary" type="submit">Submit</button>
+		</form>
+	</div>
+</div>
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'staff-home' %}">Home</a></li>
+<li class="breadcrumb-item"><a href="{% url 'staff-course-detail' course.id %}">{{course.Name}}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'staff-courses-assignment-detail' course.id assignment.id %}">{{assignment.Title}}</a></li>
+<li class="breadcrumb-item active" aria-current="page">Edit</li>
+{% endblock %}

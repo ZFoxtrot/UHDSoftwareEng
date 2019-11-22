@@ -190,7 +190,7 @@ def staff_courses_assignment_save_grades(request, id, aid):
 					pass
 	return redirect('staff-courses-assignment-detail', id, aid)
 
-@login_required
+@group_required('Staff')
 def staff_courses_assignment_create(request, id):
 	c = get_object_or_404(Course, pk=id)
 	if request.method == "POST":
@@ -211,28 +211,60 @@ def staff_courses_assignment_create(request, id):
 	})
 
 @login_required
-def staff_courses_assignment_edit(request, pk):
-	Edit = get_object_or_404(Assignment, pk=pk)
+def staff_courses_assignment_edit(request, id, aid):
+	c = get_object_or_404(Course, pk=id)
+	a = get_object_or_404(Assignment, pk=aid)
 	if request.method == "POST":
-		form = AssignmentForm(request.POST, instance=Edit)
+		form = AssignmentForm(request.POST)
 		if form.is_valid():
-			Edit = form.save(commit=False)
-			Edit.Title = request.POST['Title']
-			Edit.Due_date = request.POST['Due_date']
-			Edit.Description = request.POST['Description']
-			Edit.save()
-			return redirect('GradeManagement/staff_courses_assignments.html', pk=Edit.pk)
+			a.Title = form.cleaned_data['title']
+			a.Due_date = datetime.combine(form.cleaned_data['due_date'], form.cleaned_data['due_time'])
+			a.Description = form.cleaned_data['description']
+			a.save()
+			return redirect('staff-courses-assignment-detail', id, a.id)
 	else:
-		form = AssignmentForm(instance=Edit)
-	return render(request, 'GradeManagement/staff_courses_assignments_edit.html', {'form': form})
+		form = AssignmentForm(initial={
+			'title': a.Title,
+			'description': a.Description,
+			'due_date': a.Due_date.date(),
+			'due_time': a.Due_date.time()
+		})
+	return render(request, 'GradeManagement/staff_courses_assignments_edit.html', {
+	'form': form,
+	'course': c,
+	'assignment': a
+	})
 
 @group_required('Staff')
-def staff_courses_final_grades(request):
-	return render(request, 'GradeManagement/staff_courses_final_grades.html')
+def staff_courses_final_grades(request, id):
+	c = get_object_or_404(Course, pk=id)
+	e = c.enrollment_set.all()
+	return render(request, 'GradeManagement/staff_courses_final_grades.html', {
+	'course': c,
+	'enrollments': e
+	})
 
 @group_required('Staff')
-def staff_courses_final_grades_save(request):
-	return render(request, 'GradeManagement/staff_courses_final_grades.html')
+def staff_courses_final_grades_save(request, id):
+	if request.method == "POST":
+		c = get_object_or_404(Course, pk=id)
+		e = c.enrollment_set.all()
+		for key in request.POST:
+			if key.startswith('grade'):
+				uid = key[5:]
+				try:
+					value = int(request.POST[key])
+					if e.filter(id=uid).exists():
+						enrollment = e.get(id=uid)
+						if value == "":
+							enrollment.Grade = -1
+						else:
+							enrollment.Grade = value
+						enrollment.save()
+				except ValueError:
+					pass
+		return redirect('staff-course-detail', id)
+	return redirect('staff-courses-final-grades', id)
 
 # STAFF ADMIN FUNCTIONS
 @login_required
