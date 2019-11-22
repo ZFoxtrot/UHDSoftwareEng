@@ -37,8 +37,17 @@ urlpatterns = [
         path('final_grades', GradeManagement.views.staff_courses_final_grades, name='staff-courses-final-grades'),
         path('final_grades/save', GradeManagement.views.staff_courses_final_grades_save, name='staff-courses-final-grades-save'),
     ])),
-    path('staff/admin', GradeManagement.views.staff_administration, name='staff-admin'),
+    path('staff/admin', GradeManagement.views.staff_administration, name='admin-home'),
 	path('staff/admin/', include([
-		path('course/<int:id>/edit', GradeManagement.views.staff_administration_course_edit, name='staff-admin-course-edit')
+		path('courses', GradeManagement.views.admin_courses, name='admin-courses'),
+		path('course/<int:id>', GradeManagement.views.admin_course_detail, name='admin-course-detail'),
+		path('course/<int:id>/edit', GradeManagement.views.admin_course_edit, name='admin-course-edit'),
+		path('course/<int:id>/enrollments', GradeManagement.views.admin_course_enrollments, name='admin-course-enrollments'),
+		path('course/<int:id>/enrollments/delete', GradeManagement.views.admin_course_enrollments_delete, name='admin-course-enrollments-delete'),
+		path('course/create', GradeManagement.views.admin_course_create, name='admin-course-create'),
+		path('users', GradeManagement.views.admin_users, name='admin-users'),
+		path('semesters', GradeManagement.views.admin_semesters, name='admin-semesters'),
+		path('enrollments', GradeManagement.views.admin_enrollments, name='admin-enrollments'),
+		path('course/<int:id>/edit', GradeManagement.views.admin_course_edit, name='admin-course-edit')
 	])),
 ]
