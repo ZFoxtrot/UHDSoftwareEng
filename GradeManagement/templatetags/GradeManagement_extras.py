@@ -12,3 +12,9 @@ def grade_select(value, arg):
 		return ret.GradeOfAssignment
 	except AssignmentGrade.DoesNotExist:
 		return ""
+
+@register.filter
+def grade_translate(value):
+	if value >= 0:
+		return value
+	return ""
