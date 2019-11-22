@@ -79,3 +79,9 @@
 	</div>
 </div>
 {% endblock %}
+
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'staff-home' %}">Home</a></li>
+<li class="breadcrumb-item active">{{course.Name}}</li>
+{% endblock %}

@@ -9,8 +9,11 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 	<h1>
 		{{assignment.Title}}
-		<small class="text-muted"><a href="{% url 'staff-course-detail' course.id %}">{{course.Name}}</a></small>
+		<small class="text-muted">{{course.Name}}</small>
 	</h1>
+	<a class="btn btn-sm btn-outline-warning" type="button" href="{% url 'staff-courses-assignment-edit' course.id assignment.id %}">
+		Edit Assignment
+	</a>
 </div>
 <div class="row">
 	<dl class="col-md-4">
@@ -57,4 +60,11 @@
 		</form>
 	</div>
 </div>
+{% endblock %}
+
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'staff-home' %}">Home</a></li>
+<li class="breadcrumb-item"><a href="{% url 'staff-course-detail' course.id %}">{{course.Name}}</a></li>
+<li class="breadcrumb-item active">{{assignment.Title}}</li>
 {% endblock %}

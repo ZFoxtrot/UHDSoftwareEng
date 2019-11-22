@@ -39,3 +39,9 @@
 	</div>
 </div>
 {% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'staff-home' %}">Home</a></li>
+<li class="breadcrumb-item"><a href="{% url 'staff-course-detail' course.id %}">{{course.Name}}</a></li>
+<li class="breadcrumb-item active" aria-current="page">Create</li>
+{% endblock %}
