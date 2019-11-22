@@ -1,0 +1,28 @@
+{% extends "GradeManagement\staff_dashboard.html" %}
+
+{% block f_admin_active %}
+	active
+{% endblock %}
+{% block f_admin_link %}
+	#
+{% endblock %}
+{% block title %}
+	Administration - Grade Management System
+{% endblock %}
+
+{% block content %}
+<h3>
+	Please select a section to administrate below
+</h3>
+<p>
+	<a href="{% url 'admin-courses' %}"><h6>Courses</h6></a>
+	<a href="{% url 'admin-users' %}"><h6>Users</h6></a>
+	<a href="{% url 'admin-semesters' %}"><h6>Semesters</h6></a>
+	<a href="{% url 'admin-enrollments' %}"><h6>Enrollments</h6></a>
+</p>
+{% endblock %}
+
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">Administration</li>
+{% endblock %}

@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Course, Enrollment, Assignment, AssignmentGrade, Semester
 from django.http import HttpResponse, JsonResponse
-from .forms import AssignmentForm, SemesterForm, CourseForm, AddUserForm, EditUserForm
+from .forms import AssignmentForm, SemesterForm, CourseForm, AddUserForm, EditUserForm, EnrollmentForm
 from datetime import datetime
 
 def group_required(*group_names):
@@ -210,7 +210,7 @@ def staff_courses_assignment_create(request, id):
 	"course": c
 	})
 
-@login_required
+@group_required('Staff')
 def staff_courses_assignment_edit(request, id, aid):
 	c = get_object_or_404(Course, pk=id)
 	a = get_object_or_404(Assignment, pk=aid)
@@ -267,10 +267,100 @@ def staff_courses_final_grades_save(request, id):
 	return redirect('staff-courses-final-grades', id)
 
 # STAFF ADMIN FUNCTIONS
-@login_required
+@group_required('Staff')
 def staff_administration(request):
-	return render(request, 'GradeManagement/staff_administration.html')
+	return render(request, 'GradeManagement/admin_home.html')
 
+@group_required('Staff')
+def admin_courses(request):
+	return render(request, 'GradeManagement/admin_courses.html', {
+	'active_courses': Course.objects.filter(SemesterOfCourse__Active=True),
+	'inactive_courses': Course.objects.filter(SemesterOfCourse__Active=False)
+	})
+
+@group_required('Staff')
+def admin_course_detail(request, id):
+	c = get_object_or_404(Course, pk=id)
+	en = c.enrollment_set.all()
+	a = c.assignment_set.all()
+	return render(request, 'GradeManagement/admin_course_detail.html', {
+	'course': c,
+	'enrollments': en,
+	'assignments': a
+	})
+
+@group_required('Staff')
+def admin_course_enrollments(request, id):
+	c = get_object_or_404(Course, pk=id)
+	en = c.enrollment_set.all()
+	if request.method == "POST":
+		print(request.POST)
+		form = EnrollmentForm(request.POST)
+		if form.is_valid():
+			e = Enrollment()
+			e.Students = form.cleaned_data['student']
+			e.Course = form.cleaned_data['course']
+			if form.cleaned_data['grade'] is not None:
+				e.Grade = form.cleaned_data['grade']
+			e.save()
+	form = EnrollmentForm(initial={
+		'course': c
+	})
+	form['course'].field.widget.attrs['readonly'] = 'readonly'
+	usersEnrolled = User.objects.filter(pk__in=set(en.values_list('Students', flat=True)))
+	form['student'].field.queryset = User.objects.filter(groups__name='Student').difference(usersEnrolled)
+	return render(request, 'GradeManagement/admin_course_enrollments.html', {
+	'course': c,
+	'enrollments': en,
+	'form': form
+	})
+
+@group_required('Staff')
+def admin_course_create(request):
+	if request.method == "POST":
+		form = CourseForm(request.POST)
+		if form.is_valid():
+			c = Course()
+			c.Name = form.cleaned_data['name']
+			c.Teacher = form.cleaned_data['teacher']
+			c.SemesterOfCourse = form.cleaned_data['semester']
+			c.save()
+			return redirect('admin-course-detail', c.id)
+	else:
+		form = CourseForm()
+	return render(request, 'GradeManagement/admin_course_create.html', {
+	'form': form,
+	})
+
+@group_required('Staff')
+def admin_course_enrollments_delete(request, id):
+	successCode = 0
+	if request.method == "POST":
+		try:
+			e = Enrollment.objects.get(pk=request.POST['eid'])
+			e.delete()
+			successCode = 1
+		except Exception as ex:
+			successCode = -1
+	else:
+		successCode = -2
+	return JsonResponse({'success': successCode})
+
+@group_required('Staff')
+def admin_users(request):
+	pass
+
+@group_required('Staff')
+def admin_semesters(request):
+	pass
+
+@group_required('Staff')
+def admin_enrollments(request):
+	pass
+
+@group_required('Staff')
+def admin_course_edit(request):
+	pass
 
 ## STAFF ON USER FUNCTIONS
 @login_required

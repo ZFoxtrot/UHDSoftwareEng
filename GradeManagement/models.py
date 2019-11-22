@@ -9,7 +9,7 @@ class Semester(models.Model):
     Active = models.BooleanField(default=False)
 
     def __str__(self):
-        return 'Semester: {}'.format(self.Title)
+        return '{}'.format(self.Title)
 
 # Field null=True is required for on_delete=models.SET_NULL to work
 # on_delete=models.CASCADE probably won't require it but I haven't tested it
@@ -21,7 +21,7 @@ class Course(models.Model):
     SemesterOfCourse = models.ForeignKey(Semester, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return 'Course: {}/{}'.format(self.Name, self.SemesterOfCourse.Title)
+        return '{}/{}'.format(self.Name, self.SemesterOfCourse)
 
 
 class Assignment(models.Model):
@@ -31,7 +31,7 @@ class Assignment(models.Model):
     Course = models.ForeignKey(Course, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return 'Assignment: {}/{}'.format(self.Course, self.Title)
+        return '{}/{}'.format(self.Course, self.Title)
 
 
 class AssignmentGrade(models.Model):
@@ -44,7 +44,7 @@ class AssignmentGrade(models.Model):
     GradeOfAssignment = models.IntegerField(null=True)
 
     def __str__(self):
-        return 'AssignmentGrade: {}/{}/{}'.format(self.Assignment, self.UserOfAssignment, self.GradeOfAssignment)
+        return '{}/{}/{}'.format(self.Assignment, self.UserOfAssignment, self.GradeOfAssignment)
 
 
 class Enrollment(models.Model):
@@ -53,4 +53,4 @@ class Enrollment(models.Model):
     Grade = models.IntegerField(null=True, default=-1)
 
     def __str__(self):
-        return 'Enrollment: {} @ {}'.format(self.Students, self.Course)
+        return '{} @ {}'.format(self.Students, self.Course)

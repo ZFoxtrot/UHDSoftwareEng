@@ -1,0 +1,121 @@
+{% extends "GradeManagement\staff_dashboard.html" %}
+
+{% block title %}
+	Admin // {{course.Name}} - Grade Management System
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+	<h3>
+		{{course.Name}}
+		<small class="text-muted">Course Enrollments</small>
+	</h3>
+</div>
+<div class="row" style="margin-bottom: 10px;">
+	<div class="col">
+		<form id="enrollmentsForm" action="{% url 'admin-course-enrollments' course.id %}" method="post">
+			<div class="form-row">
+				{% csrf_token %}
+				{% for field in form.visible_fields %}
+				<div class="form-group col">
+					{{ field.label_tag }}
+					{{ field }}
+				</div>
+				{% endfor %}
+				<button class="btn btn-primary" type="submit">Submit</button>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="row">
+	<div class="col">
+		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap pb-2">
+			<h4>Students</h4>
+		</div>
+		<table class="table table-sm table-striped">
+			<thead>
+				<tr>
+					<th scope="col">Student Name</th>
+					<th scope="col">Final Grade</th>
+					<th scope="col">Unenroll Student</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for e in enrollments %}
+				<tr>
+					<td scope="col">{{e.Students.first_name}} {{e.Students.last_name}}</td>
+					<td scope="col">
+						{% if e.Grade > -1 %}
+						{{e.Grade}}
+						{% else %}
+						-
+						{% endif %}
+					</td>
+					<td scope="col">
+						<i class="fas fa-times text-danger link" onclick="unenroll({{e.id}})"></i>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script charset="utf-8">
+	function enableEditing() {
+		$(".context").css("display", "none");
+		$(".input").css("display", "inherit");
+	}
+
+	function csrfSafeMethod(method) {
+		// these HTTP methods do not require CSRF protection
+		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+	function unenroll(eid) {
+		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if(!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+		$.ajax({
+			type: "POST",
+			url: "{% url 'admin-course-enrollments-delete' course.id %}",
+			data: {
+				"eid": eid,
+			},
+			success: function(data) {
+				switch(data["success"]) {
+					case 1:
+						location.reload();
+						break;
+					case -1:
+						$("main").prepend(prepAlertPop("<strong>Erorr!</strong> There was an error with validating the form inputs, please verify them below."));
+						break;
+					case -2:
+						$("main").prepend(prepAlertPop("<strong>Erorr!</strong> The request was malformed."));
+						break;
+					default:
+						$("main").prepend(prepAlertPop("<strong>Erorr!</strong> An unknown error has occured."));
+						break;
+
+					}
+				}
+			});
+	}
+	function prepAlertPop(alertText) {
+		return '<div class="alert alert-danger alert-dismissible fade show" role="alert">' + alertText + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	}
+</script>
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Administration</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin-courses' %}">Courses</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin-course-detail' course.id %}">{{course.Name}}</a></li>
+<li class="breadcrumb-item active">Edit Enrollments</li>
+{% endblock %}

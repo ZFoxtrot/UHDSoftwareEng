@@ -108,3 +108,7 @@ body {
 .navbar.navbar-dark.bg-dark {
 	color: white;
 }
+
+i.link {
+	cursor: pointer;
+}

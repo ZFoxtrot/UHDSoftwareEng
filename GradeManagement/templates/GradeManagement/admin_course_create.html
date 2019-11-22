@@ -1,0 +1,34 @@
+{% extends "GradeManagement\staff_dashboard.html" %}
+
+{% block title %}
+	Admin // Create New Course - Grade Management System
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+	<h1>
+		Create New Course
+	</h1>
+</div>
+<div class="row">
+	<div class="col">
+		<form id="gradeForm" action="{% url 'admin-course-create' %}" method="post">
+			{% csrf_token %}
+			{% for field in form.visible_fields %}
+			<div class="form-group">
+				{{ field.label_tag }}
+				{{ field }}
+			</div>
+			{% endfor %}
+			<button class="btn btn-primary" type="submit">Submit</button>
+		</form>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Administration</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin-courses' %}">Courses</a></li>
+<li class="breadcrumb-item active">Create</li>
+{% endblock %}

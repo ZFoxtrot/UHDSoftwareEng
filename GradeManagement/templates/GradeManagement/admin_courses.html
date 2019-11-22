@@ -1,0 +1,69 @@
+{% extends "GradeManagement\staff_dashboard.html" %}
+
+{% block title %}
+	Admin // Courses - Grade Management System
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col">
+		<a class="btn btn-sm btn-outline-warning" type="button" href="{% url 'admin-course-create' %}">
+			Create New Course
+		</a>
+	</div>
+</div>
+<div class="row">
+	<div class="col">
+		<h3>Active Courses</h3>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">Semester</th>
+					<th scope="col">Course Name</th>
+					<th scope="col">Students</th>
+					<th scope="col">Assignments</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for c in active_courses %}
+				<tr>
+					<td scope="col">{{c.SemesterOfCourse.Title}}</td>
+					<td scope="col"><a href="{% url 'admin-course-detail' c.id %}">{{c.Name}}</a></td>
+					<td scope="col">{{c.enrollment_set.all.count}}</td>
+					<td scope="col">{{c.assignment_set.all.count}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<div class="col">
+		<h3>Inactive Courses</h3>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">Semester</th>
+					<th scope="col">Course Name</th>
+					<th scope="col">Students</th>
+					<th scope="col">Assignments</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for c in inactive_courses %}
+				<tr>
+					<td scope="col">{{c.SemesterOfCourse.Title}}</td>
+					<td scope="col"><a href="{% url 'admin-course-detail' c.id %}">{{c.Name}}</a></td>
+					<td scope="col">{{c.enrollment_set.all.count}}</td>
+					<td scope="col">{{c.assignment_set.all.count}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Administration</a></li>
+<li class="breadcrumb-item active">Courses</li>
+{% endblock %}

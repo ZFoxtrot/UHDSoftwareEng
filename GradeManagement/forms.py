@@ -18,12 +18,27 @@ class SemesterForm(forms.ModelForm):
         fields = ('Title', 'StartDate', 'EndDate', 'Active')
 
 
-class CourseForm(forms.ModelForm):
+class CourseForm(forms.Form):
+	name = forms.CharField(label='Name', max_length=256, required=True, widget=forms.TextInput(attrs={
+	'class': 'form-control'
+	}))
+	teacher = forms.ModelChoiceField(User.objects.filter(groups__name='Staff'), widget=forms.Select(attrs={
+	'class': 'form-control'
+	}))
+	semester = forms.ModelChoiceField(Semester.objects.all(), widget=forms.Select(attrs={
+	'class': 'form-control'
+	}))
 
-    class Meta:
-        model = Course
-        fields = ('Name', 'Teacher', 'SemesterOfCourse')
-
+class EnrollmentForm(forms.Form):
+	student = forms.ModelChoiceField(User.objects.filter(groups__name='Student'), required=True, widget=forms.Select(attrs={
+	'class': 'form-control'
+	}))
+	course = forms.ModelChoiceField(Course.objects.all(), required=True, widget=forms.Select(attrs={
+	'class': 'form-control'
+	}))
+	grade = forms.IntegerField(max_value=100, min_value=0, required=False, widget=forms.NumberInput(attrs={
+	'class': 'form-control'
+	}))
 
 # Form for creating additional users
 # Inherits django's user creation form
