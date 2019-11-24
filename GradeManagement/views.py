@@ -366,7 +366,11 @@ def admin_course_enrollments_delete(request, id):
 
 @group_required('Staff')
 def admin_users(request):
-	pass
+	StudentUsers = User.objects.filter(groups__name='Student')
+	StaffUsers = User.objects.filter(groups__name='Staff')
+	return render(request, "GradeManagement/admin_users.html", {
+	'StudentList': StudentUsers,
+	'StaffList': StaffUsers})
 
 @group_required('Staff')
 def admin_semesters(request):

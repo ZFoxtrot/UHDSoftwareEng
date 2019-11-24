@@ -1,0 +1,61 @@
+{% extends "GradeManagement\staff_dashboard.html" %}
+
+{% block f_admin_active %}
+	active
+{% endblock %}
+
+{% block title %}
+	Admin // Users - Grade Management System
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col" style="position">
+		<h3>All users</h3>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">
+            <h4>Students </h4></th>
+				</tr>
+        <tr>
+          <th scope="col">Username</th>
+          <th scope="col">First Name</th>
+          <th scope="col">Last Name</th>
+        </tr>
+			</thead>
+			<tbody>
+				{% for c in StudentList %}
+				<tr>
+          <td scope="col"> {{c.username}} </td>
+					<td scope="col">{{c.first_name}}</td>
+          <td scope="col"> {{c.last_name}} </td>
+				</tr>
+				{% endfor %}
+			</tbody>
+      <thead>
+				<tr>
+					<th scope="col">
+            <h4>Staff</h4>
+          </th>
+				</tr>
+			</thead>
+      <tbody>
+				{% for c in StaffList %}
+				<tr>
+          <td scope="col"> {{c.username}} </td>
+					<td scope="col">{{c.first_name}}</td>
+          <td scope="col"> {{c.last_name}} </td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Administration</a></li>
+<li class="breadcrumb-item active">Users</li>
+{% endblock %}
