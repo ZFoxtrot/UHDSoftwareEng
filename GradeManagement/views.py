@@ -67,6 +67,22 @@ def student_personal_info(request):
 	return render(request, 'GradeManagement/student_personal_info.html')
 
 @group_required('Student')
+def student_personalinfo_save(request):
+	successCode = 0
+	if request.method == "POST":
+		try:
+			request.user.first_name = request.POST['firstName']
+			request.user.last_name = request.POST['lastName']
+			request.user.email = request.POST['email']
+			request.user.save()
+			successCode = 1
+		except:
+			successCode = -1
+	else:
+		successCode = -2
+	return JsonResponse({'success': successCode})
+
+@group_required('Student')
 def student_grades(request):
 	SortedEnrollments = request.user.enrollment_set.all().order_by('Course__SemesterOfCourse__StartDate')
 	SemesterSorts = []
