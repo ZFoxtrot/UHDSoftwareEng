@@ -368,13 +368,30 @@ def admin_course_enrollments_delete(request, id):
 def admin_users(request):
 	StudentUsers = User.objects.filter(groups__name='Student')
 	StaffUsers = User.objects.filter(groups__name='Staff')
+	Allusers = User.objects.all()
 	return render(request, "GradeManagement/admin_users.html", {
 	'StudentList': StudentUsers,
 	'StaffList': StaffUsers})
 
 @group_required('Staff')
 def admin_users_create(request):
-	pass
+	if request.method == "POST":
+		form = AddUserForm(request.POST)
+		if form.is_valid():
+			u = User()
+			u.username = form.cleaned_data['username']
+			u.first_name = form.cleaned_data['firstname']
+			u.last_name = form.cleaned_data['lastname']
+			u.email = form.cleaned_data['email']
+			u.password = form.cleaned_data['password']
+			u.save()
+			group = form.cleaned_data['Group']
+			group.save()
+			group.user_set.add(u)
+			return redirect('admin-users')
+	else:
+		form = AddUserForm()
+	return render(request, 'GradeManagement/admin_users_create.html', {'form': form})
 
 @group_required('Staff')
 def admin_semesters(request):

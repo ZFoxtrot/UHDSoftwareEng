@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from .models import Assignment, Semester, Course
@@ -40,29 +40,27 @@ class EnrollmentForm(forms.Form):
 	'class': 'form-control'
 	}))
 
-# Form for creating additional users
-# Inherits django's user creation form
-class AddUserForm(UserCreationForm):
-    email = forms.EmailField(required=True)
 
-    class Meta:
-        model = User
-        fields = (
-            'username',
-            'first_name',
-            'last_name',
-            'email',
-            'password1',
-            'password2'
-        )
+class AddUserForm(forms.Form):
+	username = forms.CharField(label='Username', max_length=256, required=True, widget=forms.TextInput(attrs={
+	'class': 'form-control'
+	}))
+	firstname = forms.CharField(label='FirstName', max_length=256, required=True, widget=forms.TextInput(attrs={
+	'class': 'form-control'
+	}))
+	lastname = forms.CharField(label='LastName', max_length=256, required=True, widget=forms.TextInput(attrs={
+	'class': 'form-control'
+	}))
+	email = forms.CharField(label='Email', max_length=256, required=True, widget=forms.EmailInput(attrs={
+	'class': 'form-control'
+	}))
+	Group = forms.ModelChoiceField(Group.objects.all(), required=True, widget=forms.Select(attrs={
+	'class': 'form-control'
+	}))
+	password = forms.CharField(label='Password', max_length=256, required=True, widget=forms.PasswordInput(attrs={
+	'class': 'form-control'
+	}))
 
-    def save(self, commit=True):
-        user = super(AddUserForm, self).save(commit=False)
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_date['last_name']
-        user.email = self.cleaned_date['email']
-        user.save()
-        return user
 
 
 class EditUserForm(UserChangeForm):
