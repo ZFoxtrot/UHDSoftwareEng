@@ -1,4 +1,5 @@
 {% extends "GradeManagement\student_dashboard.html" %}
+{% load GradeManagement_extras %}
 
 {% block title %}
 	My Transcript - Grade Management System
@@ -55,7 +56,7 @@
 		{% endfor %}
 		<tr>
 			<td scope="col" colspan="2" class="text-right font-weight-bold">Career Average</td>
-			<td>{{average}}</td>
+			<td>{{average|grade_translate}}</td>
 		</tr>
 	</tbody>
 </table>

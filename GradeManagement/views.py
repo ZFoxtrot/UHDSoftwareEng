@@ -98,7 +98,9 @@ def student_grades(request):
 			CurrentDictionary["Average"] = CurrentDictionary["TotalPoints"] / CurrentDictionary["TotalClasses"]
 		CurrentDictionary["Enrollments"].append(e)
 	SemesterSorts.append(CurrentDictionary)
-	CareerTotalAverage = CareerTotalPoints / CareerTotalClasses
+	CareerTotalAverage = -1
+	if CareerTotalClasses > 0:
+		CareerTotalAverage = CareerTotalPoints / CareerTotalClasses
 	return render(request, 'GradeManagement/student_transcript.html', {'transcript': SemesterSorts, 'average': CareerTotalAverage})
 
 def goodbye(request):
@@ -257,7 +259,7 @@ def staff_courses_final_grades_save(request, id):
 					if e.filter(id=uid).exists():
 						enrollment = e.get(id=uid)
 						if value == "":
-							enrollment.Grade = -1
+							enrollment.Grade = None
 						else:
 							enrollment.Grade = value
 						enrollment.save()
