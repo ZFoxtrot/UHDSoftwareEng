@@ -9,9 +9,15 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="row">
 	<div class="col" style="position">
-		<h3>All users</h3>
+		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap pb-2">
+			<h3>All users</h3>
+			<a class="btn btn-sm btn-outline-warning" type="button" href="{% url 'admin-users-create' %}">
+				Add New User
+			</a>
+		</div>
 		<table class="table table-striped">
 			<thead>
 				<tr>

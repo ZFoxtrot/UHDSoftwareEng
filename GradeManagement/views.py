@@ -373,6 +373,10 @@ def admin_users(request):
 	'StaffList': StaffUsers})
 
 @group_required('Staff')
+def admin_users_create(request):
+	pass
+
+@group_required('Staff')
 def admin_semesters(request):
 	pass
 
