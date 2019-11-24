@@ -22,6 +22,7 @@ urlpatterns = [
     path('', GradeManagement.views.welcome, name='welcome'),  # Home page will redirect to views.home in LoginPage
 	path('student/home', GradeManagement.views.student_home, name='student-home'),
 	path('student/personal_info', GradeManagement.views.student_personal_info, name='student-personal-info'),
+    path('student/personal_info/save', GradeManagement.views.student_personalinfo_save,name='student-personal-info-save'),
 	path('student/transcript', GradeManagement.views.student_grades, name='student-grades'),
 	path('student/course/<int:id>', GradeManagement.views.student_course_detail, name='student-course-detail'),
 	path('goodbye', GradeManagement.views.goodbye, name='goodbye'),
