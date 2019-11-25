@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Course, Enrollment, Assignment, AssignmentGrade, Semester
 from django.http import HttpResponse, JsonResponse
-from .forms import AssignmentForm, SemesterForm, CourseForm, AddUserForm, EditUserForm, EnrollmentForm
+from .forms import AssignmentForm, SemesterForm, CourseForm, AddUserForm, EnrollmentForm
 from datetime import datetime
 
 def group_required(*group_names):
@@ -395,7 +395,12 @@ def admin_users_create(request):
 
 @group_required('Staff')
 def admin_semesters(request):
-	pass
+	ActiveSemester = Semester.objects.filter(Active=True)
+	InactiveSemester = Semester.objects.filter(Active=False)
+	return render(request, 'GradeManagement/admin_semesters.html', {
+	'ActiveSemester': ActiveSemester,
+	'InactiveSemester': InactiveSemester,
+	})
 
 @group_required('Staff')
 def admin_enrollments(request):

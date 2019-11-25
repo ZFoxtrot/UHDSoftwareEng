@@ -1,0 +1,68 @@
+{% extends "GradeManagement\staff_dashboard.html" %}
+
+{% block f_admin_active %}
+	active
+{% endblock %}
+
+{% block title %}
+	Admin // Semester - Grade Management System
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+	<div class="col" style="position">
+		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap pb-2">
+			<h3>All Semesters</h3>
+		</div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">
+            <h4>Active Semester</h4></th>
+				</tr>
+        <tr>
+          <th scope="col">Title</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">End Date</th>
+        </tr>
+			</thead>
+			<tbody>
+				{% for c in ActiveSemester %}
+        <tr>
+					<td scope="col">{{c.Title}}</td>
+          <td scope="col"> {{c.StartDate}} </td>
+          <td scope="col"> {{c.EndDate}} </td>
+				</tr>
+				{% endfor %}
+			</tbody>
+      <thead>
+				<tr>
+					<th scope="col">
+            <h4>Inactive Semester</h4></th>
+				</tr>
+        <tr>
+          <th scope="col">Title</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">End Date</th>
+        </tr>
+        <tbody>
+  				{% for c in InactiveSemester %}
+          <tr>
+  					<td scope="col">{{c.Title}}</td>
+            <td scope="col"> {{c.StartDate}} </td>
+            <td scope="col"> {{c.EndDate}} </td>
+  				</tr>
+  				{% endfor %}
+  			</tbody>
+			</thead>
+		</table>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Administration</a></li>
+<li class="breadcrumb-item active">Semester</li>
+{% endblock %}
