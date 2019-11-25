@@ -501,24 +501,20 @@ def staff_administration_semesters(request):
 	return render(request, 'GradeManagement/staff_administration_semesters.html')
 
 @group_required('Staff')
-def staff_administration_semesters_add(request):
+def admin_semesters_create(request):
 	if request.method == "POST":
 		form = SemesterForm(request.POST)
 		if form.is_valid():
-			NewSemester = form.save(commit=False)
-			NewSemester.Title = request.POST['Title']
-			NewSemester.StartDate = request.POST['StartDate']
-			NewSemester.EndDate = request.POST['EndDate']
-			NewSemester.Active = request.POST['Active']
-			NewSemester.save()
-			return redirect('GradeManagement/staff_administration_semesters.html', pk=NewSemester.pk)
+			s = Semester()
+			s.Title = form.cleaned_data['title']
+			s.StartDate = form.cleaned_data['start_date']
+			s.EndDate = form.cleaned_data['end_date']
+			s.Active = form.cleaned_data['active']
+			s.save()
+			return redirect('admin-semesters')
 	else:
 		form = SemesterForm()
-	return render(request, 'GradeManagement/staff_administration_semesters_add.html', {'form': form})
-
-@group_required('Staff')
-def staff_administration_semesters_setCurrent(request):
-	return render(request, 'GradeManagement/staff_administration_semesters_setCurrent.html')
+	return render(request, 'GradeManagement/admin_semesters_create.html', {'form': form})
 
 @group_required('Staff')
 def admin_semesters_activity(request):

@@ -11,11 +11,19 @@ class AssignmentForm(forms.Form):
 	due_time = forms.TimeField(widget=forms.TimeInput, label='Time', required=True)
 	description = forms.CharField(widget=forms.Textarea, required=True)
 
-class SemesterForm(forms.ModelForm):
-
-    class Meta:
-        model = Semester
-        fields = ('Title', 'StartDate', 'EndDate', 'Active')
+class SemesterForm(forms.Form):
+	title = forms.CharField(label='Title', max_length=256, required=True, widget=forms.TextInput(attrs={
+	'class': 'form-control'
+	}))
+	start_date = forms.DateField(label='Start Date', required=True, widget=forms.DateInput(attrs={
+	'class': 'form-control'
+	}))
+	end_date = forms.DateField(label='End Date', required=True, widget=forms.DateInput(attrs={
+	'class': 'form-control'
+	}))
+	active = forms.BooleanField(label='Active', required=False, widget=forms.CheckboxInput(attrs={
+	'class': 'form-control'
+	}))
 
 
 class CourseForm(forms.Form):

@@ -49,6 +49,7 @@ urlpatterns = [
 		path('users', GradeManagement.views.admin_users, name='admin-users'),
         path('users/create', GradeManagement.views.admin_users_create, name='admin-users-create'),
 		path('semesters', GradeManagement.views.admin_semesters, name='admin-semesters'),
+		path('semesters/create', GradeManagement.views.admin_semesters_create, name='admin-semesters-create'),
 		path('semesters/activity', GradeManagement.views.admin_semesters_activity, name='admin-semesters-activity'),
 		path('enrollments', GradeManagement.views.admin_enrollments, name='admin-enrollments'),
 		path('course/<int:id>/edit', GradeManagement.views.admin_course_edit, name='admin-course-edit')
