@@ -69,14 +69,19 @@ class AddUserForm(forms.Form):
 	'class': 'form-control'
 	}))
 
-
-
-class EditUserForm(UserChangeForm):
-
-    class Meta:
-        model = User
-        fields = (
-            'first_name',
-            'last_name',
-            'email',
-        )
+class EditUserForm(forms.Form):
+	username = forms.CharField(label='Username', max_length=256, required=True, widget=forms.TextInput(attrs={
+	'class': 'form-control'
+	}))
+	firstname = forms.CharField(label='FirstName', max_length=256, required=True, widget=forms.TextInput(attrs={
+	'class': 'form-control'
+	}))
+	lastname = forms.CharField(label='LastName', max_length=256, required=True, widget=forms.TextInput(attrs={
+	'class': 'form-control'
+	}))
+	email = forms.CharField(label='Email', max_length=256, required=True, widget=forms.EmailInput(attrs={
+	'class': 'form-control'
+	}))
+	Group = forms.ModelChoiceField(Group.objects.all(), required=True, widget=forms.Select(attrs={
+	'class': 'form-control'
+	}))

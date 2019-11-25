@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group, User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Course, Enrollment, Assignment, AssignmentGrade, Semester
 from django.http import HttpResponse, JsonResponse
-from .forms import AssignmentForm, SemesterForm, CourseForm, AddUserForm, EnrollmentForm
+from .forms import AssignmentForm, SemesterForm, CourseForm, AddUserForm, EnrollmentForm, EditUserForm
 from datetime import datetime
 
 def group_required(*group_names):
@@ -394,6 +394,31 @@ def admin_users_create(request):
 	return render(request, 'GradeManagement/admin_users_create.html', {'form': form})
 
 @group_required('Staff')
+def admin_users_edit(request, id):
+	u = get_object_or_404(User, pk=id)
+	if request.method == "POST":
+		form = EditUserForm(request.POST)
+		if form.is_valid():
+			u.username = form.cleaned_data['username']
+			u.first_name = form.cleaned_data['firstname']
+			u.last_name = form.cleaned_data['lastname']
+			u.email = form.cleaned_data['email']
+			u.save()
+			group = form.cleaned_data['Group']
+			group.save()
+			group.user_set.add(u)
+			return redirect('admin-users')
+	else:
+		form = EditUserForm(initial={
+		"username": u.username,
+		"firstname": u.first_name,
+		"lastname": u.last_name,
+		"email": u.email,
+		"Group": u.groups.all()[0].id
+		})
+	return render(request, 'GradeManagement/admin_users_edit.html', {'form': form, 'user': u})
+
+@group_required('Staff')
 def admin_semesters(request):
 	ActiveSemester = Semester.objects.filter(Active=True)
 	InactiveSemester = Semester.objects.filter(Active=False)
@@ -403,18 +428,10 @@ def admin_semesters(request):
 	})
 
 @group_required('Staff')
-def admin_enrollments(request):
-	pass
-
-@group_required('Staff')
 def admin_course_edit(request):
 	pass
 
 ## STAFF ON USER FUNCTIONS
-@group_required('Staff')
-def staff_administration_users(request):
-	return render(request, 'GradeManagement/staff_administration_users.html')
-
 @group_required('Staff')
 def staff_administration_users_addUser(request):
 	if request.method == "POST":
@@ -425,14 +442,6 @@ def staff_administration_users_addUser(request):
 		else:
 			form = AddUserForm()
 	return render(request, 'GradeManagement/staff_administration_users_addUser.html', {'form': form})
-
-@group_required('Staff')
-def staff_administration_users_addUser_save(request):
-	return render(request, 'GradeManagement/staff_administration_users_addUser_save.html')
-
-@group_required('Staff')
-def staff_administration_users_details(request):
-	return render(request, 'GradeManagement/staff_administration_users_details.html')
 
 @group_required('Staff')
 def staff_administration_users_details_editUser(request):
@@ -448,7 +457,6 @@ def staff_administration_users_details_editUser(request):
 @group_required('Staff')
 def staff_administration_users_details_deactivateUser(request):
 	return render(request, 'GradeManagement/staff_administration_users_details_deactivateUser.html')
-
 
 ## STAFF ON COURSE FUNCTIONS
 @group_required('Staff')
@@ -493,12 +501,6 @@ def staff_administration_course_edit(request, pk):
 	else:
 		form = CourseForm(instance=CourseEdit)
 	return render(request, 'GradeManagement/staff_administration_course_edit.html')
-
-
-## STAFF ON SEMESTER FUNCTIONS
-@group_required('Staff')
-def staff_administration_semesters(request):
-	return render(request, 'GradeManagement/staff_administration_semesters.html')
 
 @group_required('Staff')
 def admin_semesters_create(request):

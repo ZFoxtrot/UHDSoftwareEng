@@ -9,7 +9,6 @@
 {% endblock %}
 
 {% block content %}
-
 <div class="row">
 	<div class="col" style="position">
 		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap pb-2">
@@ -22,39 +21,47 @@
 			<thead>
 				<tr>
 					<th scope="col">
-            <h4>Students </h4></th>
+						<h4>Students </h4>
+					</th>
 				</tr>
-        <tr>
-          <th scope="col">Username</th>
-          <th scope="col">First Name</th>
-          <th scope="col">Last Name</th>
-					<th scope="col">E-mail </th>
-        </tr>
+				<tr>
+					<th scope="col">Username</th>
+					<th scope="col">First Name</th>
+					<th scope="col">Last Name</th>
+					<th scope="col">E-mail</th>
+					<th scope="col">Edit</th>
+				</tr>
 			</thead>
 			<tbody>
 				{% for c in StudentList %}
 				<tr>
-          <td scope="col"> {{c.username}} </td>
+					<td scope="col">{{c.username}}</td>
 					<td scope="col">{{c.first_name}}</td>
-          <td scope="col"> {{c.last_name}} </td>
-					<td scope="col"> {{c.email}} </td>
+					<td scope="col">{{c.last_name}}</td>
+					<td scope="col">{{c.email}}</td>
+					<td scope="col">
+						<a href="{% url 'admin-users-edit' c.id %}"><i class="fas fa-pencil-alt text-warning fa-xl"></i></a>
+					</td>
 				</tr>
 				{% endfor %}
 			</tbody>
-      <thead>
+			<thead>
 				<tr>
 					<th scope="col">
-            <h4>Staff</h4>
-          </th>
+						<h4>Staff</h4>
+					</th>
 				</tr>
 			</thead>
-      <tbody>
+			<tbody>
 				{% for c in StaffList %}
 				<tr>
-          <td scope="col"> {{c.username}} </td>
+					<td scope="col">{{c.username}}</td>
 					<td scope="col">{{c.first_name}}</td>
-          <td scope="col"> {{c.last_name}} </td>
-					<td scope="col"> {{c.email}}
+					<td scope="col">{{c.last_name}}</td>
+					<td scope="col">{{c.email}}</td>
+					<td scope="col">
+						<a href="{% url 'admin-users-edit' c.id %}"><i class="fas fa-pencil-alt text-warning fa-xl"></i></a>
+					</td>
 				</tr>
 				{% endfor %}
 			</tbody>
