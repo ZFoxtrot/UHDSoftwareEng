@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-
+{% csrf_token %}
 <div class="row">
 	<div class="col" style="position">
 		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap pb-2">
@@ -19,48 +19,101 @@
 			<thead>
 				<tr>
 					<th scope="col">
-            <h4>Active Semester</h4></th>
+						<h4>Active Semester</h4>
+					</th>
 				</tr>
-        <tr>
-          <th scope="col">Title</th>
-          <th scope="col">Start Date</th>
-          <th scope="col">End Date</th>
-        </tr>
+				<tr>
+					<th scope="col">Title</th>
+					<th scope="col">Start Date</th>
+					<th scope="col">End Date</th>
+					<th scope="col">Set Active</th>
+				</tr>
 			</thead>
 			<tbody>
 				{% for c in ActiveSemester %}
-        <tr>
+				<tr>
 					<td scope="col">{{c.Title}}</td>
-          <td scope="col"> {{c.StartDate}} </td>
-          <td scope="col"> {{c.EndDate}} </td>
+					<td scope="col">{{c.StartDate}}</td>
+					<td scope="col">{{c.EndDate}}</td>
+					<td scope="col">
+						<i class="fas fa-times text-danger fa-2x link" onclick="setActivity({{c.id}}, 'inactive')"></i>
+					</td>
 				</tr>
 				{% endfor %}
 			</tbody>
-      <thead>
+			<thead>
 				<tr>
 					<th scope="col">
-            <h4>Inactive Semester</h4></th>
+						<h4>Inactive Semester</h4>
+					</th>
 				</tr>
-        <tr>
-          <th scope="col">Title</th>
-          <th scope="col">Start Date</th>
-          <th scope="col">End Date</th>
-        </tr>
-        <tbody>
-  				{% for c in InactiveSemester %}
-          <tr>
-  					<td scope="col">{{c.Title}}</td>
-            <td scope="col"> {{c.StartDate}} </td>
-            <td scope="col"> {{c.EndDate}} </td>
-  				</tr>
-  				{% endfor %}
-  			</tbody>
+				<tr>
+					<th scope="col">Title</th>
+					<th scope="col">Start Date</th>
+					<th scope="col">End Date</th>
+					<th scope="col">Set Active</th>
+				</tr>
+				<tbody>
+					{% for c in InactiveSemester %}
+					<tr>
+						<td scope="col">{{c.Title}}</td>
+						<td scope="col">{{c.StartDate}}</td>
+						<td scope="col">{{c.EndDate}}</td>
+						<td scope="col">
+							<i class="fas fa-check-square text-success fa-2x link" onclick="setActivity({{c.id}}, 'active')"></i>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
 			</thead>
 		</table>
 	</div>
 </div>
 {% endblock %}
 
+{% block js %}
+<script charset="utf-8">
+	function csrfSafeMethod(method) {
+		// these HTTP methods do not require CSRF protection
+		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+	function setActivity(id, method) {
+		var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if(!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+		$.ajax({
+			type: "POST",
+			url: "{% url 'admin-semesters-activity' %}",
+			data: {
+				"semester": id,
+				"method": method
+			},
+			success: function(data) {
+				switch(data["success"]) {
+					case 1:
+						location.reload();
+						break;
+					case -1:
+						$("main").prepend(prepAlertPop("<strong>Erorr!</strong> There was an error with validating the form inputs, please verify them below."));
+						break;
+					case -2:
+						$("main").prepend(prepAlertPop("<strong>Erorr!</strong> The request was malformed."));
+						break;
+					default:
+						$("main").prepend(prepAlertPop("<strong>Erorr!</strong> An unknown error has occured."));
+						break;
+
+					}
+				}
+			});
+	}
+</script>
+{% endblock %}
 
 {% block breadcrumb %}
 <li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Administration</a></li>

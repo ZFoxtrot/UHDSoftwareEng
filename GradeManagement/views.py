@@ -411,11 +411,11 @@ def admin_course_edit(request):
 	pass
 
 ## STAFF ON USER FUNCTIONS
-@login_required
+@group_required('Staff')
 def staff_administration_users(request):
 	return render(request, 'GradeManagement/staff_administration_users.html')
 
-@login_required
+@group_required('Staff')
 def staff_administration_users_addUser(request):
 	if request.method == "POST":
 		form = AddUserForm(request.POST)
@@ -426,15 +426,15 @@ def staff_administration_users_addUser(request):
 			form = AddUserForm()
 	return render(request, 'GradeManagement/staff_administration_users_addUser.html', {'form': form})
 
-@login_required
+@group_required('Staff')
 def staff_administration_users_addUser_save(request):
 	return render(request, 'GradeManagement/staff_administration_users_addUser_save.html')
 
-@login_required
+@group_required('Staff')
 def staff_administration_users_details(request):
 	return render(request, 'GradeManagement/staff_administration_users_details.html')
 
-@login_required
+@group_required('Staff')
 def staff_administration_users_details_editUser(request):
 	if request.method == "POST":
 		form = EditUserForm(request.POST, instance=request.user)
@@ -445,17 +445,17 @@ def staff_administration_users_details_editUser(request):
 		form = EditUserForm(instance=request.user)
 	return render(request, 'GradeManagement/staff_administration_users_details_editUser.html', {'form': form})
 
-@login_required
+@group_required('Staff')
 def staff_administration_users_details_deactivateUser(request):
 	return render(request, 'GradeManagement/staff_administration_users_details_deactivateUser.html')
 
 
 ## STAFF ON COURSE FUNCTIONS
-@login_required
+@group_required('Staff')
 def staff_administration_courses(request):
 	return render(request, 'GradeManagement/staff_administration_courses.html')
 
-@login_required
+@group_required('Staff')
 def staff_adminstration_courses_addcourse(request):
 	if request.method == "POST":
 		form = CourseForm(request.POST)
@@ -470,15 +470,15 @@ def staff_adminstration_courses_addcourse(request):
 		form = CourseForm()
 	return render(request, 'GradeManagement/staff_adminstration_courses_addcourse.html', {'form': form})
 
-@login_required
+@group_required('Staff')
 def staff_adminstration_courses_details(request):
 	return render(request, 'GradeManagement/staff_adminstration_courses_details.html')
 
-@login_required
+@group_required('Staff')
 def staff_administration_course_duplicate(request):
 	return render(request, 'GradeManagement/staff_administration_course_duplicate.html')
 
-@login_required
+@group_required('Staff')
 def staff_administration_course_edit(request, pk):
 	CourseEdit = get_object_or_404(Course, pk=pk)
 	if request.method == "POST":
@@ -496,11 +496,11 @@ def staff_administration_course_edit(request, pk):
 
 
 ## STAFF ON SEMESTER FUNCTIONS
-@login_required
+@group_required('Staff')
 def staff_administration_semesters(request):
 	return render(request, 'GradeManagement/staff_administration_semesters.html')
 
-@login_required
+@group_required('Staff')
 def staff_administration_semesters_add(request):
 	if request.method == "POST":
 		form = SemesterForm(request.POST)
@@ -516,9 +516,28 @@ def staff_administration_semesters_add(request):
 		form = SemesterForm()
 	return render(request, 'GradeManagement/staff_administration_semesters_add.html', {'form': form})
 
-@login_required
+@group_required('Staff')
 def staff_administration_semesters_setCurrent(request):
 	return render(request, 'GradeManagement/staff_administration_semesters_setCurrent.html')
+
+@group_required('Staff')
+def admin_semesters_activity(request):
+	if request.method == "POST":
+		try:
+			if request.POST["method"] == "active":
+				s = Semester.objects.get(pk=request.POST["semester"])
+				s.Active = True
+				s.save()
+			elif request.POST["method"] == "inactive":
+				s = Semester.objects.get(pk=request.POST["semester"])
+				s.Active = False
+				s.save()
+			else:
+				return JsonResponse({"success": -1})
+			return JsonResponse({"success": 1})
+		except:
+			return JsonResponse({"success": -1})
+	return JsonResponse({"success": -2})
 
 ####################
 # END: STAFF VIEWS #
